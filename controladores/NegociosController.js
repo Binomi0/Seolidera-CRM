@@ -1,6 +1,6 @@
 'use strict';
 
-const Negocios = require('../modelos/negocios');
+const Negocios = require('../modelos/negociosSchema');
 
 module.exports = {
 

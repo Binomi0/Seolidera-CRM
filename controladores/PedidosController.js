@@ -1,23 +1,25 @@
 'use strict';
-
-const Agentes = require('../modelos/agentes');
+const Pedidos = require('../modelos/pedidosSchema');
 
 module.exports = {
 
     find: function (params, callback) {
-        Agentes.find(params, function (err, result) {
+        Pedidos.find(params, function (err, pedidos) {
             if (err){
                 return callback(err, null);
             }
-            return callback(null, result)
+
+            return callback(null, pedidos)
         })
     },
+
     create: function (params, callback) {
-        Agentes.create(params, function (err, clientes) {
+        Pedidos.create(params, function (err, pedidos) {
             if (err){
                 return callback(err, null);
             }
-            return callback(null, clientes)
+
+            return callback(null, pedidos)
         })
     }
 };

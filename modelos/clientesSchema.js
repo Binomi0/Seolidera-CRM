@@ -1,10 +1,10 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const Negocio = require('./negocios');
-const Llamada = require('./llamadas');
-const Pedido = require('./pedidos');
-const Tarea = require('./tareas');
+const Negocio = require('./negociosSchema');
+const Llamada = require('./llamadasSchema');
+const Pedido = require('./pedidosSchema');
+const Tarea = require('./tareasSchema');
 
 const ClientesSchema = new mongoose.Schema({
     nombre: { type: String },

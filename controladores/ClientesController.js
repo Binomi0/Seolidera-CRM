@@ -1,7 +1,7 @@
 'use strict';
 
-const Clientes = require('../modelos/clientes');
-const Negocios = require('../modelos/negocios');
+const Clientes = require('../modelos/clientesSchema');
+const Negocios = require('../modelos/negociosSchema');
 
 module.exports = {
 

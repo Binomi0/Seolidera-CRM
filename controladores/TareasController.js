@@ -1,6 +1,6 @@
 'use strict';
 
-const Tareas = require('../modelos/tareas');
+const Tareas = require('../modelos/tareasSchema');
 
 module.exports = {
 

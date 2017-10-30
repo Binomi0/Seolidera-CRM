@@ -1,6 +1,6 @@
 'use strict';
 
-const Usuarios = require('../modelos/usuarios');
+const Usuarios = require('../modelos/usuariosSchema');
 
 module.exports = {
 

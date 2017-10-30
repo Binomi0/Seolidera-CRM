@@ -1,6 +1,6 @@
 'use strict';
 
-const Llamadas = require('../modelos/llamadas');
+const Llamadas = require('../modelos/llamadasSchema');
 
 module.exports = {
 

@@ -1,10 +1,10 @@
-const PedidosSchema = require('./PedidosSchema');
-const UsuariosSchema = require('./UsuariosSchema');
-const TareasSchema = require('./TareasSchema');
-const LlamadasSchema = require('./LlamadasSchema');
-const AgentesSchema = require('./AgentesSchema');
-const NegociosSchema = require('./NegociosSchema');
-const ClientesSchema = require('./ClientesSchema');
+const PedidosSchema = require('./PedidosController');
+const UsuariosSchema = require('./UsuariosController');
+const TareasSchema = require('./TareasController');
+const LlamadasSchema = require('./LlamadasController');
+const AgentesSchema = require('./AgentesController');
+const NegociosSchema = require('./NegociosController');
+const ClientesController = require('./ClientesController');
 
 module.exports = {
     pedidos: PedidosSchema,
@@ -13,5 +13,5 @@ module.exports = {
     agentes: AgentesSchema,
     negocios: NegociosSchema,
     tareas: TareasSchema,
-    clientes: ClientesSchema,
+    clientes: ClientesController,
 };

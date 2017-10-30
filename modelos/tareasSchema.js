@@ -1,7 +1,7 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const Cliente = require('./clientes');
+const Cliente = require('./clientesSchema');
 
 const TareasSchema = new mongoose.Schema({
     cliente: { type: mongoose.Schema.Types.ObjectId, ref: 'Cliente' },
