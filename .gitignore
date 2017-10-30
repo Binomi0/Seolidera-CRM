@@ -1,7 +1,8 @@
 # Created by .ignore support plugin (hsz.mobi)
 .gitignore
 .idea/workspace.xml
-/node_modules
+/node_modules/
 public/images/
 public/javascripts/
-/client/node_modules
+public/stylesheets/
+/client/node_modules/
