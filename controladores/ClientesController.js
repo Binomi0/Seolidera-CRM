@@ -24,10 +24,10 @@ module.exports = {
         })
     },
     update: function (id, resource, body, callback) {
-        console.log('ClietesSchjema: ID:', id);
+        console.log('Cliente ID:', id);
         console.log('resource:', resource);
         console.log('body:', body);
-        Clientes.update({}, id, { $push: { [resource]: body }} , function (err, response) {
+        Clientes.findOneAndUpdate({ '_id': id } , { $push: { [resource]: body }}, { new: true }, function (err, response) {
             if (err) {
                 return callback(err,  null);
             }

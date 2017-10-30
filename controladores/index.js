@@ -1,17 +1,17 @@
-const PedidosSchema = require('./PedidosController');
-const UsuariosSchema = require('./UsuariosController');
-const TareasSchema = require('./TareasController');
+const PedidosController = require('./PedidosController');
+const UsuariosController = require('./UsuariosController');
+const TareasController = require('./TareasController');
 const LlamadasSchema = require('./LlamadasController');
-const AgentesSchema = require('./AgentesController');
-const NegociosSchema = require('./NegociosController');
+const AgentesController = require('./AgentesController');
+const NegociosController = require('./NegociosController');
 const ClientesController = require('./ClientesController');
 
 module.exports = {
-    pedidos: PedidosSchema,
-    usuarios: UsuariosSchema,
+    pedidos: PedidosController,
+    usuarios: UsuariosController,
     llamadas: LlamadasSchema,
-    agentes: AgentesSchema,
-    negocios: NegociosSchema,
-    tareas: TareasSchema,
+    agentes: AgentesController,
+    negocios: NegociosController,
+    tareas: TareasController,
     clientes: ClientesController,
 };
