@@ -7,7 +7,7 @@ router.get('/', function(req, res) {
   res.render('index', { title: 'GooglePartner API', message: 'GooglePartner' });
 });
 
-router.get('/:resource', function (req, res, next) {
+router.get('/:resource', function (req, res) {
     let resource = req.params.resource;
     let controller = controllers[resource];
     // console.log('Resource:', resource)
@@ -24,7 +24,7 @@ router.get('/:resource', function (req, res, next) {
     }
 });
 
-router.get('/:resource/:id', function (req, res, next) {
+router.get('/:resource/:id', function (req, res) {
     // console.log('Resource/id');
 
     let resource = req.params.resource;
@@ -59,9 +59,6 @@ router.get('/:resource/:id', function (req, res, next) {
             }
 
             if (result.length >= 1) {
-                if (param !== 'cliente') {
-
-                }
                 response = res.json({
                     confirmation: 'success',
                     result
@@ -113,7 +110,6 @@ router.post('/:resource/?:action', function (req, res) {
                         confirmacion: `Error al crear el recurso: '${resource}' `,
                         mensaje: err
                     });
-                    return
                 } else {
                     res.json({
                         confirmation: 'Respuesta OK',

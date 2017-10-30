@@ -1,6 +1,7 @@
 'use strict';
 
 const Clientes = require('../modelos/clientes');
+const Negocios = require('../modelos/negocios');
 
 module.exports = {
 
@@ -9,7 +10,13 @@ module.exports = {
             if (err){
                 return callback(err, null);
             }
-            return callback(null, result)
+            Negocios.populate(result, { path: 'negocios' }, function (err, negocio) {
+                if (err){
+                    return callback(err, null);
+                }
+                return callback(null,  negocio)
+            } );
+            // return callback(null, result)
         }).populate('_id')
     },
     create: function (params, callback) {
