@@ -1,0 +1,52 @@
+extends layout
+
+block content
+	h1 Editar Ficha de Negocio
+	form(action="/negocios/editar" method="post")
+		input(type="text" name="cliente" id="cliente" placeholder="Negocio" required class="form-input")
+		br
+		input(type="text" name="nombre" id="nombre" placeholder="Nombre del Negocio"  class="form-input")
+		br
+		input(type="text" name="pais" id="pais" placeholder="Pais "  class="form-input")
+		br
+		input(type="text" name="direccion" id="direccion" placeholder="Dirección"  class="form-input")
+		br
+		input(type="text" name="postal" id="postal" placeholder="Código Postal"  class="form-input")
+		br
+		input(type="text" name="ciudad" id="ciudad" placeholder="Ciudad"  class="form-input")
+		br
+		input(type="text" name="provincia" id="provincia" placeholder="Provincia"  class="form-input")
+		br
+		input(type="text" name="tlf" id="tlf" placeholder="Teléfono "  class="form-input")
+		br
+		input(type="text" name="sector" id="sector" placeholder="Sector / Categoría "  class="form-input")
+		br
+		input(type="text" name="web" id="web" placeholder="Introduce una URL" class="form-input")
+		br
+		//label(for="horainicio") Hora Apertura:
+		//input(type="number" id="horainicio" min="1" max="23" name="horario" placeholder="8" required class="form-input")
+		//label(for="minutoinicio")
+		//input(type="number" id="minutoinicio" step="5" min="0" max="55" name="horario" placeholder="30" required class="form-input")
+		//br
+		//label(for="horacierre") Hora Cierre:
+		//input(type="number" id="horacierre" min="1" max="23" name="horario" placeholder="8" required class="form-input")
+		//label(for="minutocierre")
+		//input(type="number" id="minutocierre" step="5" min="0" max="55" name="horario" placeholder="30" required class="form-input")
+		//input(type="hidden" name="tipo" id="tipo" value="cliente" class="form-input")
+		//br
+		//label(for='facebook') Facebook
+		//input(type='checkbox' name='redes' id='facebook' value='facebook')
+		//label(for='twitter') Twitter
+		//input(type='checkbox' name='redes' id='twitter' value='twitter')
+		//label(for='instagram') Instagram
+		//input(type='checkbox' name='redes' id='instagram' value='instagram')
+		//label(for='youtube') YouTube
+		//input(type='checkbox' name='redes' id='youtube' value='youtube')
+		//br
+		//label(for='frases') Frases Clave
+		//br
+		//textarea(name='frases' id='frases' rows='4' cols='50' placeholder='mi frase 1,\nmi frase 2,\nmi frase 3,\n...')
+		//br
+		//input(type='file' name='fotos' id='fotos' multiple accept=".jpg, .jpeg, .png")
+		br
+		input(type="submit" value="Nuevo Negocio")

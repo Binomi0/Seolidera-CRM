@@ -1,0 +1,42 @@
+extends layout
+
+block content
+	h1 Crear nuevo Cliente
+	form(action="/clientes/nuevo" method="post")
+		input(type="text" onchange="userfunc()" name="nombre" id="nombre" placeholder="Nombre" required class="form-input")
+		input(type="text" name="apellidos" id="apellidos" placeholder="Apellidos" required class="form-input")
+		br
+		input(type="text" name="fiscal" id="fiscal" placeholder="Nombre Fiscal" required class="form-input")
+		input(type="text" name="dni" id="dni" placeholder="N.I.F." required class="form-input")
+		br
+		input(type="text" name="email" id="email" placeholder="Correo Electrónico" required class="form-input")
+		input(type="text" name="telf" id="telf" placeholder="Teléfono" required class="form-input")
+		br
+		input(type="text" name="direccion" id="direccion" placeholder="Dirección 1" required class="form-input")
+		input(type="text" name="direccion2" id="direccion2" placeholder="Dirección 2" class="form-input")
+		br
+		input(type="text" name="poblacion" id="poblacion" placeholder="Población" required class="form-input")
+		input(type="text" name="provincia" id="provincia" placeholder="Provincia" required class="form-input")
+		br
+		input(type="text" name="postal" id="postal" placeholder="Código Postal" required class="form-input")
+		input(type="text" name="fuente" id="fuente" placeholder="Fuente" class="form-input")
+		br
+		textarea(name='observaciones' id='observaciones' rows='4' cols='48' placeholder='Obsevaciones...' class="form-input")
+		br
+		br
+		input(type="hidden" name="tipo" id="tipo" value="cliente")
+		input(type="hidden" name="buser" id="buser" value="")
+		input(type="hidden" name="bpasw" id="bpasw" value="")
+		br
+		input(type="submit" value="Crear Nuevo Cliente")
+	script.
+		var nombre = document.getElementById('nombre')
+		// var buser = ''
+		// nombre.onChange = function () {console.log(user); }
+		function userfunc() {
+			var buser = nombre.value.trim().toLowerCase().slice(0, 4)
+			document.getElementById('buser').value = 'seo' + buser + Math.floor(Math.random() * (99 - 10)) + 10 + '@gmail.com';
+		}
+		document.getElementById('bpasw').value = Math.random().toString(36).slice(-8);
+
+

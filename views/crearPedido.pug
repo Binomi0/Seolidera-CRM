@@ -1,0 +1,16 @@
+extends layout
+
+block content
+
+	body
+		h1 Crear nuevo Pedido
+		form(action="/pedido/nuevo" method="post")
+			input(type="text" name="cliente" placeholder="Cliente" required)
+			br
+			input(type="text" name="producto" placeholder="Producto" required)
+			br
+			input(type="text" name="precio" placeholder="Precio" required)
+			br
+			input(type="submit" value="Nuevo Pedido")
+
+	script.

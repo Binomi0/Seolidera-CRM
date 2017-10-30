@@ -1,0 +1,25 @@
+extends layout
+
+block content
+
+	body
+		h1 Crear nueva Llamada
+		form(action="/llamadas/nuevo" method="post")
+			input(type="text" name="cliente" placeholder="Cliente" required class="form-input")
+			br
+			input(type="text" name="asunto" placeholder="Producto" required class="form-input")
+			br
+			input(type="text" name="telf" placeholder="Teléfono" required class="form-input")
+			br
+			input(type="text" name="agente" placeholder="Agente" required class="form-input")
+			br
+			input(type="text" name="objetivo" placeholder="Objetivo" required class="form-input")
+			br
+			input(type="text" name="producto" placeholder="Producto" required class="form-input")
+			br
+			input(type="textarea" name="descripcion" placeholder="Descripción" required class="form-input")
+			br
+			input(type="text" name="tipo" placeholder="Tipo de llamada" required class="form-input")
+			br
+			input(type="hidden" name="estado" value="nueva")
+			input(type="submit" value="Nueva Llamada")
