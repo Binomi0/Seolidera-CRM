@@ -110,6 +110,23 @@ router.post('/:resource/?:action', function (req, res) {
                         confirmacion: `Error al crear el recurso: '${resource}' `,
                         mensaje: err
                     });
+                }
+                if (resource !== 'clientes') {
+                    controllers['clientes'].update(id, resource,  result._id, function (err, result2) {
+                        console.log('Actualizando cliente', result2);
+                        if (err) {
+                            res.json({
+                                respuesta: 'Ha habido un error al actualizar el negocio del cliente',
+                                error: err
+                            });
+                            return
+                        }
+                        res.json({
+                            respuesta: 'Actualización OK',
+                            negocio: result,
+                            cliente: result2
+                        })
+                    });
                 } else {
                     res.json({
                         confirmation: 'Respuesta OK',

@@ -10,14 +10,8 @@ module.exports = {
             if (err){
                 return callback(err, null);
             }
-            Negocios.populate(result, { path: 'negocios' }, function (err, negocio) {
-                if (err){
-                    return callback(err, null);
-                }
-                return callback(null,  negocio)
-            } );
-            // return callback(null, result)
-        }).populate('_id')
+            return callback(null, result)
+        }).populate('negocios').populate('tareas')
     },
     create: function (params, callback) {
         console.log('PArametros recibidos ', params);
@@ -33,7 +27,7 @@ module.exports = {
         console.log('ClietesSchjema: ID:', id);
         console.log('resource:', resource);
         console.log('body:', body);
-        Clientes.findOneAndUpdate(id, body, {new: true}, function (err, response) {
+        Clientes.update({}, id, { $push: { [resource]: body }} , function (err, response) {
             if (err) {
                 return callback(err,  null);
             }

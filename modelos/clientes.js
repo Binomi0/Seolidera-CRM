@@ -1,10 +1,10 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const NegociosSchema = require('./negocios');
-const LlamadasSchema = require('./llamadas');
-const PedidosSchema = require('./pedidos');
-const TareasSchema = require('./tareas');
+const Negocio = require('./negocios');
+const Llamada = require('./llamadas');
+const Pedido = require('./pedidos');
+const Tarea = require('./tareas');
 
 const ClientesSchema = new mongoose.Schema({
     nombre: { type: String },
@@ -30,7 +30,7 @@ const ClientesSchema = new mongoose.Schema({
     pedidos: [{type: mongoose.Schema.Types.ObjectId, ref: 'Pedido'}],
     llamadas: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Llamada'}],
     negocios: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Negocio'}],
-    tareas: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Negocio'}]
+    tareas: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tarea'}]
 });
 
 module.exports = mongoose.model('Cliente', ClientesSchema);
