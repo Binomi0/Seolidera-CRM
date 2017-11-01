@@ -10,23 +10,14 @@ class Llamadas extends Component {
         super(props);
         this.state = {
             llamadas: [],
-            editando: false
+            tabla: [],
+            editando: false,
+            selected: ''
         }
     }
 
     componentWillMount() {
-        fetch('/llamadas')
-            .then(res => res.json())
-            .then(llamadas => this.setState({ llamadas }))
-    }
-
-
-    addAction(action) {
-        console.log('action:',action);
-        this.setState({ editando: action })
-    }
-
-    render() {
+        let newArray = [], datos;
         let columnData = [
             { id: 'agente', numeric: false, disablePadding: true, label: 'Agente' },
             { id: 'tlf', numeric: false, disablePadding: false, label: 'Teléfono' },
@@ -34,6 +25,42 @@ class Llamadas extends Component {
             { id: 'estado', numeric: false, disablePadding: false, label: 'Estado de Llamada' },
             { id: 'descripcion', numeric: false, disablePadding: false, label: 'Descripción' },
         ];
+        fetch('/llamadas')
+            .then(res => res.json())
+            .then(llamadas => {
+                datos = llamadas.map((llamadas, index) => {
+                    let data = {
+                        id: index,
+                        agente: llamadas.agente,
+                        tlf: llamadas.tlf,
+                        objetivo: llamadas.objetivo,
+                        estado: llamadas.estado,
+                        descripcion: llamadas.descripcion
+                    };
+                    newArray.push(data);
+                    return newArray
+                });
+                this.setState({ llamadas, tabla: datos, columnData })
+            });
+    }
+
+
+    // addAction(action) {
+    //     console.log('action:',action);
+    //     this.setState({ editando: action })
+    // }
+
+    itemSelected(client) {
+        this.setState({ selected: client, editando: true })
+    }
+
+    render() {
+        let { llamadas, selected, columnData, tabla } = this.state;
+        let llamada;
+        if (!llamadas) { return } else {
+            llamada = llamadas[selected];
+        }
+
         return (
             <div>
                 <Header title="Llamadas"/>
@@ -41,18 +68,26 @@ class Llamadas extends Component {
                     this.state.llamadas.length > 0 && columnData
                         ? <div style={{margin: 10}} >
                             <Table
-                                datos={this.state.llamadas}
+                                data={tabla}
                                 columnData={columnData}
                                 title="Llamadas"
+                                itemSelected={this.itemSelected.bind(this)}
                             />
                         </div>
                         : ''
                 }
                 {
                     !this.state.editando ? (
-                        <Crear onclick={this.addAction.bind(this)} route="Llamada" />
+                        <Crear
+                            // onclick={this.addAction.bind(this)}
+                            route="Llamada"
+                        />
                     ) : (
-                        <Button style={{float: 'right'}} raised color="accent" onClick={this.addAction.bind(this, false)} >
+                        <Button
+                            style={{float: 'right'}}
+                            raised color="accent"
+                            // onClick={this.addAction.bind(this, false)}
+                        >
                             <CloseIcon />
                         </Button>
                     )

@@ -12,6 +12,7 @@ class Usuarios extends Component {
         super();
         this.state = {
             usuarios: [],
+            tabla: [],
             editando: false,
             selected: '',
         };
@@ -42,37 +43,30 @@ class Usuarios extends Component {
                     newArray.push(data);
                     return newArray
                 });
-                this.setState({ usuarios: datos, columnData })
+                this.setState({ usuarios, tabla: datos, columnData })
             });
     }
 
+    // addAction(action) {
+    //     console.log('action:',action);
+    //     this.setState({ editando: action })
+    // }
 
-    addAction(action) {
-        console.log('action:',action);
-        this.setState({ editando: action })
-    }
-
-    clientSelected(client) {
+    itemSelected(client) {
         this.setState({ selected: client, editando: true })
     }
 
     render() {
         // console.log(this.props);
-        let { usuarios, selected, columnData } = this.state;
+        let { usuarios, selected, columnData, tabla } = this.state;
         let cliente;
-
         if (!usuarios) { return } else {
             cliente = usuarios[selected];
         }
-
         return (
             <div>
                 <Header title="Clientes" />
-                {
-                    !this.props.route
-                        ? ''
-                        : console.log(this.props.route)//<Redirect to="/login" />
-                }
+
                 {
                     this.state.selected !== 'undefined' && cliente ? (
                         <ul>
@@ -106,16 +100,19 @@ class Usuarios extends Component {
                                     <div> </div>
                                     : (
                                     <Table
-                                        data={this.state.usuarios}
+                                        data={tabla}
                                         columnData={columnData}
                                         title="Cliente"
-                                        itemSelected={this.clientSelected.bind(this)}
+                                        itemSelected={this.itemSelected.bind(this)}
                                     />
                                 )
                             }
                             {
                                 !this.state.editando ? (
-                                    <Crear onclick={this.addAction.bind(this)} route="Cliente" />
+                                    <Crear
+                                        // onclick={this.addAction.bind(this)}
+                                        route="Cliente"
+                                    />
                                 ) : ''
                             }
                         </div>

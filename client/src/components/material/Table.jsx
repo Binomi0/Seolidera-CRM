@@ -215,6 +215,7 @@ class EnhancedTable extends React.Component {
 
     componentWillMount() {
         let { data, columnData } = this.props;
+        console.log('Montando tabla con: ', data);
         let newArray = [];
         for (let i = 0; i < data.length; i++) {
             let datos = { id: data[0][i]['id'], [columnData[0]['id']]: data[0][i][columnData[0]['id']], [columnData[1]['id']]: data[0][i][columnData[1]['id']], [columnData[2]['id']]: data[0][i][columnData[2]['id']] === true ? 'Si' : 'No', [columnData[3]['id']]: data[0][i][columnData[3]['id']].length, [columnData[4]['id']]: data[0][i][columnData[4]['id']].length }

@@ -12,15 +12,39 @@ class Tareas extends Component {
         super(props);
         this.state = {
             tareas: [],
+            tabla:[],
             editando: false,
-            selected: ''
+            selected: '',
+            columnData: []
         }
     }
 
     componentWillMount() {
-        fetch('/tareas') // vale no hay tareas en la db...
+        let newArray = [], datos;
+        let columnData = [
+            { id: 'cliente', numeric: false, disablePadding: true, label: 'Cliente' },
+            { id: 'fecha_venta', numeric: false, disablePadding: false, label: 'Fecha Venta' },
+            { id: 'asunto', numeric: false, disablePadding: false, label: 'Asunto' },
+            { id: 'propietario', numeric: false, disablePadding: false, label: 'Propietario' },
+            { id: 'descripcion', numeric: false, disablePadding: false, label: 'Descripción' },
+        ];
+        fetch('/tareas')
             .then(res => res.json())
-            .then(tareas => this.setState({ tareas }))
+            .then(tareas => {
+                datos = tareas.map((tarea, index) => {
+                    let data = {
+                        id: index,
+                        cliente: tarea.cliente,
+                        fecha_venta: tarea.fecha_venta,
+                        asunto: tarea.asunto,
+                        propietario: tarea.propietario,
+                        descripcion: tarea.descripcion
+                    };
+                    newArray.push(data);
+                    return newArray
+                });
+                this.setState({ tareas, tabla: datos, columnData })
+            });
     }
 
     addAction(action) {
@@ -33,15 +57,8 @@ class Tareas extends Component {
     }
 
     render() {
-        let columnData = [
-            { id: 'cliente', numeric: false, disablePadding: true, label: 'Cliente' },
-            { id: 'fecha_venta', numeric: false, disablePadding: false, label: 'Fecha Venta' },
-            { id: 'asunto', numeric: false, disablePadding: false, label: 'Asunto' },
-            { id: 'propietario', numeric: false, disablePadding: false, label: 'Propietario' },
-            { id: 'descripcion', numeric: false, disablePadding: false, label: 'Descripción' },
-        ];
-        // esto es lo que digo de filtar
-        let { tareas, selected } = this.state;
+
+        let { tareas, selected, tabla, columnData } = this.state;
         let tarea;
         if (!tareas) { return } else {
             tarea = tareas[selected];
@@ -71,7 +88,7 @@ class Tareas extends Component {
                     this.state.tareas.length > 0 && columnData
                         ? <div style={{margin: 10}}>
                         <Table
-                            datos={this.state.tareas}
+                            data={tabla}
                             columnData={columnData}
                             title="Tareas"
                             itemSelected={this.itemSelected.bind(this)} // para poder elegir

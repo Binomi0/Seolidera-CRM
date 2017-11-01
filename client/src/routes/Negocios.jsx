@@ -10,6 +10,7 @@ class Pedidos extends Component {
         super(props);
         this.state = {
             negocios: [],
+            tabla: [],
             editando: false,
             selected: ''
         }
@@ -31,23 +32,23 @@ class Pedidos extends Component {
                     let data = {
                         id: index,
                         nombre: negocio.nombre,
-                        telf: negocio.tlf,
-                        activo: negocio.web,
-                        negocios: negocio.cliente,
-                        tareas: negocio.ciudad
+                        tlf: negocio.tlf,
+                        web: negocio.web,
+                        cliente: negocio.cliente,
+                        ciudad: negocio.ciudad
                     };
                     newArray.push(data);
                     return newArray
                 });
-                this.setState({ negocios: datos, columnData })
+                this.setState({ negocios, tabla: datos, columnData })
             })
 
     }
 
-    addAction(action) {
-        console.log('action:',action);
-        this.setState({ editando: action })
-    }
+    // addAction(action) {
+    //     console.log('action:',action);
+    //     this.setState({ editando: action })
+    // }
 
     itemSelected(value) {
         this.setState({ selected: value, editando: true })
@@ -55,7 +56,7 @@ class Pedidos extends Component {
 
     render() {
 
-        let { negocios, selected, columnData } = this.state;
+        let { negocios, selected, columnData, tabla } = this.state;
         let negocio;
         if (!negocios) { return } else {
             negocio = negocios[selected];
@@ -93,18 +94,20 @@ class Pedidos extends Component {
                                 <div></div>
                                 :
                                 <Table // no se por qué no funsiona el boton + en tareas
-                                    datos={this.state.negocios}
+                                    data={tabla}
                                     columnData={columnData}
                                     title="Negocios"
                                     itemSelected={this.itemSelected.bind(this)} // para recuperar el item seleccionado
                                 />
                         }
                     </div>
-                    : '' // sino una mierda
+                    : <div> </div> // sino una mierda
                 }
                 {
                     !this.state.editando ? (
-                        <Crear onclick={this.addAction.bind(this)} route="Negocio" />
+                        <Crear
+                            // onclick={this.addAction.bind(this)}
+                            route="Negocio" />
                     ) : ''
                 }
             </div>
