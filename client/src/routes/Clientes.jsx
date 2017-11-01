@@ -4,22 +4,48 @@ import Table from '../components/material/Table';
 import Button from 'material-ui/Button';
 import CloseIcon from 'material-ui-icons/Close';
 // import Tareas from "./Tareas";
-// import Crear from '../components/Crear';
+import Crear from '../components/Crear';
 // import { Redirect } from 'react-router-dom';
 
 class Usuarios extends Component {
-    state = {
-        usuarios: [],
-        editando: false,
-        selected: ''
-    };
-
+    constructor() {
+        super();
+        this.state = {
+            usuarios: [],
+            editando: false,
+            selected: '',
+        };
+        // this.obtenerDatos = this.obtenerDatos.bind(this);
+    }
 
     componentWillMount() {
+        let newArray = [], datos;
+        let columnData = [
+            { id: 'nombre', numeric: false, disablePadding: true, label: 'Nombre ' },
+            { id: 'telf', numeric: true, disablePadding: false, label: 'Teléfono' },
+            { id: 'activo', numeric: false, disablePadding: false, label: 'Activo' },
+            { id: 'negocios', numeric: false, disablePadding: false, label: 'Negocios' },
+            { id: 'tareas', numeric: false, disablePadding: false, label: 'Tareas' }
+        ];
         fetch('/clientes')
             .then(res => res.json())
-            .then(usuarios => this.setState({ usuarios }))
+            .then(usuarios => {
+                datos = usuarios.map((usuario, index) => {
+                    let data = {
+                        id: index,
+                        nombre: usuario.nombre,
+                        telf: usuario.telf,
+                        activo: usuario.activo,
+                        negocios: usuario.negocios,
+                        tareas: usuario.tareas
+                    };
+                    newArray.push(data);
+                    return newArray
+                });
+                this.setState({ usuarios: datos, columnData })
+            });
     }
+
 
     addAction(action) {
         console.log('action:',action);
@@ -32,23 +58,16 @@ class Usuarios extends Component {
 
     render() {
         // console.log(this.props);
-        let columnData = [
-            { id: 'nombre', numeric: false, disablePadding: true, label: 'Nombre ' },
-            { id: 'telefono', numeric: true, disablePadding: false, label: 'Teléfono' },
-            { id: 'activo', numeric: false, disablePadding: false, label: 'Activo' },
-            { id: 'negocios', numeric: false, disablePadding: false, label: 'Negocios' },
-            { id: 'tareas', numeric: false, disablePadding: false, label: 'Tareas' }
-        ];
-
-        let { usuarios, selected } = this.state;
+        let { usuarios, selected, columnData } = this.state;
         let cliente;
+
         if (!usuarios) { return } else {
             cliente = usuarios[selected];
         }
 
         return (
             <div>
-                <Header title="Clientes"/>
+                <Header title="Clientes" />
                 {
                     !this.props.route
                         ? ''
@@ -73,6 +92,8 @@ class Usuarios extends Component {
                             <li>{cliente.alta} </li>
                             <li>{cliente.dni} </li>
                             <li>{cliente.observaciones} </li>
+                            <li>{cliente.buser} </li>
+                            <li>{cliente.bpasw} </li>
                         </ul>
                     ) :
                         ''
@@ -85,25 +106,18 @@ class Usuarios extends Component {
                                     <div> </div>
                                     : (
                                     <Table
-                                        datos={this.state.usuarios}
+                                        data={this.state.usuarios}
                                         columnData={columnData}
                                         title="Cliente"
                                         itemSelected={this.clientSelected.bind(this)}
                                     />
                                 )
                             }
-                            {/*{*/}
-                                {/*!this.state.editando ? (*/}
-                                    {/*<Crear onclick={this.addAction.bind(this)}  />*/}
-                                {/*) : (*/}
-                                    {/*<div>*/}
-                                        {/*<Button style={{float: 'right'}} raised color="accent" onClick={this.addAction.bind(this, false)} >*/}
-                                            {/*<CloseIcon />*/}
-                                        {/*</Button>*/}
-                                        {/*<h1>ok</h1>*/}
-                                    {/*</div>*/}
-                                {/*)*/}
-                            {/*}*/}
+                            {
+                                !this.state.editando ? (
+                                    <Crear onclick={this.addAction.bind(this)} route="Cliente" />
+                                ) : ''
+                            }
                         </div>
                     : 'Cargando...'
                 }

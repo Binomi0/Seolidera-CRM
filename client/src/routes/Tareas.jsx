@@ -34,10 +34,10 @@ class Tareas extends Component {
 
     render() {
         let columnData = [
-            { id: 'fecha_venta', numeric: false, disablePadding: true, label: 'Fecha' },
+            { id: 'cliente', numeric: false, disablePadding: true, label: 'Cliente' },
+            { id: 'fecha_venta', numeric: false, disablePadding: false, label: 'Fecha Venta' },
             { id: 'asunto', numeric: false, disablePadding: false, label: 'Asunto' },
             { id: 'propietario', numeric: false, disablePadding: false, label: 'Propietario' },
-            { id: 'cuenta', numeric: false, disablePadding: false, label: 'Cuenta' },
             { id: 'descripcion', numeric: false, disablePadding: false, label: 'Descripción' },
         ];
         // esto es lo que digo de filtar
@@ -49,7 +49,6 @@ class Tareas extends Component {
         return (
             <div>
                 <Header title="Tareas"/>
-
                 {
                     this.state.selected !== 'undefined' && tarea ? (
                         <ul>
@@ -82,20 +81,14 @@ class Tareas extends Component {
                 }
                 {
                     !this.state.editando ? (
-                        <Crear onclick={this.addAction.bind(this)} />
+                        <Crear onclick={this.addAction.bind(this)} route="Tarea" />
                     ) : (
                         <Button style={{float: 'right'}} raised color="accent" onClick={this.addAction.bind(this, false)} >
                             <CloseIcon />
                         </Button>
                     )
                 }
-                {
-                    this.state.tareas.length == 0
-                    ? <div>
-                        sin datos
-                    </div>
-                        : ''
-                }
+
             </div>
         )
     }

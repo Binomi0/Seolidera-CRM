@@ -16,9 +16,32 @@ class Pedidos extends Component {
     }
 
     componentWillMount() {
+        let newArray= [], datos;
+        let columnData = [
+            { id: 'nombre', numeric: false, disablePadding: true, label: 'Nombre' },
+            { id: 'tlf', numeric: false, disablePadding: false, label: 'Teléfono' },
+            { id: 'web', numeric: false, disablePadding: false, label: 'Sitio Web' },
+            { id: 'cliente', numeric: false, disablePadding: false, label: 'Código de Cliente' },
+            { id: 'ciudad', numeric: false, disablePadding: false, label: 'Ciudad' },
+        ];
         fetch('/negocios')
             .then(res => res.json())
-            .then(negocios => this.setState({ negocios }))
+            .then(negocios => {
+                datos = negocios.map((negocio, index) => {
+                    let data = {
+                        id: index,
+                        nombre: negocio.nombre,
+                        telf: negocio.tlf,
+                        activo: negocio.web,
+                        negocios: negocio.cliente,
+                        tareas: negocio.ciudad
+                    };
+                    newArray.push(data);
+                    return newArray
+                });
+                this.setState({ negocios: datos, columnData })
+            })
+
     }
 
     addAction(action) {
@@ -31,14 +54,8 @@ class Pedidos extends Component {
     }
 
     render() {
-        let columnData = [
-            { id: 'nombre', numeric: false, disablePadding: true, label: 'Nombre' },
-            { id: 'telf', numeric: false, disablePadding: false, label: 'Teléfono' },
-            { id: 'web', numeric: false, disablePadding: false, label: 'Sitio Web' },
-            { id: 'cliente', numeric: false, disablePadding: false, label: 'Código de Cliente' },
-            { id: 'ciudad', numeric: false, disablePadding: false, label: 'Ciudad' },
-        ];
-        let { negocios, selected } = this.state;
+
+        let { negocios, selected, columnData } = this.state;
         let negocio;
         if (!negocios) { return } else {
             negocio = negocios[selected];
@@ -87,7 +104,7 @@ class Pedidos extends Component {
                 }
                 {
                     !this.state.editando ? (
-                        <Crear onclick={this.addAction.bind(this)} />
+                        <Crear onclick={this.addAction.bind(this)} route="Negocio" />
                     ) : ''
                 }
             </div>

@@ -12,13 +12,12 @@ const styles = theme => ({
 });
 
 function FloatingActionButtons(props) {
-    const classes = props.classes;
-    const activateAction = props.onclick
+    const { classes, activateAction, route } = props;
     function addAction(e) {
         activateAction(e)
     }
     return (
-        <Button onClick={(e) => addAction(true)} fab={true} color="accent" aria-label="add" className={classes.button}>
+        <Button href={`http://asus.onrubia.es:3001/crear${route}`} onClick={(e) => addAction(true)} fab={true} color="accent" aria-label="add" className={classes.button}>
             <AddIcon />
         </Button>
     );

@@ -50,7 +50,7 @@ class Llamadas extends Component {
                 }
                 {
                     !this.state.editando ? (
-                        <Crear onclick={this.addAction.bind(this)} />
+                        <Crear onclick={this.addAction.bind(this)} route="Llamada" />
                     ) : (
                         <Button style={{float: 'right'}} raised color="accent" onClick={this.addAction.bind(this, false)} >
                             <CloseIcon />

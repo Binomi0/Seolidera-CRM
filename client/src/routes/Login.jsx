@@ -11,8 +11,8 @@ export default class Login extends React.Component {
 
     login = () => {
         let accesos = {
-            name: 'adolfo',
-            pasw: 'ar12003'
+            name: 'admin',
+            pasw: '12345'
         };
         let { name, pasw } = this.state;
 
@@ -22,7 +22,6 @@ export default class Login extends React.Component {
         } else {
             console.log('Acceso denegado')
         }
-
     };
 
     updateName(e) {
@@ -32,7 +31,6 @@ export default class Login extends React.Component {
     updatePasw(e) {
         this.setState({ pasw: e.target.value })
     }
-
 
     render () {
         console.log(this.props.location.state);

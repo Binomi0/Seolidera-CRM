@@ -17,6 +17,7 @@ router.get('/:resource', function (req, res) {
         controller.find({}, function (err, result) {
             // console.log('Resultado:', result)
             if (err) throw err;
+            // res.render(resource, { title: `CRM | ${resource}`, datos: result });
             res.json(result)
         })
     } else {

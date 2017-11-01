@@ -27,19 +27,8 @@ import ViewIcon from 'material-ui-icons/RemoveRedEye';
 import SearchIcon from 'material-ui-icons/Search';
 import FilterListIcon from 'material-ui-icons/FilterList';
 
-// let counter = 0;
-// function createData(value, index) {
-//     console.log('VALUE: ', value, 'INDEX: ', index);
-//     counter += 1;
-//     if (typeof index !== 'number') {
-//         // console.log('No es un array, saliendo...');
-//         return
-//     }
-//     let arrayDatos = Object.assign();
-//     // console.log('Llamando a createData, VALUE:',value);
-//     // console.log('Llamando a createData, INDEX:',index);
-//     let { fiscal, tlf, activo, llamadas, email } = value;
-//     return { id: counter, fiscal, tlf, activo, llamadas, email };
+// function createData(id, nombre, telf, activo, negocios,tareas) {
+//     return { id, nombre, telf, activo, negocios, tareas };
 // }
 
 // const columnData = [
@@ -66,6 +55,7 @@ class EnhancedTableHead extends React.Component {
 
     render() {
         const { order, orderBy, columnData } = this.props;
+        console.log(columnData);
 
         return (
             <TableHead>
@@ -211,18 +201,26 @@ const styles = theme => ({
 class EnhancedTable extends React.Component {
     constructor(props) {
         super(props);
-        let { datos, columnData } = props;
-
+        let { data, columnData } = props;
         this.state = {
             order: 'asc',
             orderBy: 'fiscal',
             selected: -1,
-            data: datos,
+            data: [],
             page: 0,
             rowsPerPage: 5,
-            columnData,
         };
         this.itemClicked = this.itemClicked.bind(this)
+    }
+
+    componentWillMount() {
+        let { data, columnData } = this.props;
+        let newArray = [];
+        for (let i = 0; i < data.length; i++) {
+            let datos = { id: data[0][i]['id'], [columnData[0]['id']]: data[0][i][columnData[0]['id']], [columnData[1]['id']]: data[0][i][columnData[1]['id']], [columnData[2]['id']]: data[0][i][columnData[2]['id']] === true ? 'Si' : 'No', [columnData[3]['id']]: data[0][i][columnData[3]['id']].length, [columnData[4]['id']]: data[0][i][columnData[4]['id']].length }
+            newArray.push(datos);
+        }
+        this.setState({ data: newArray })
     }
 
     handleRequestSort = (event, property) => {
@@ -285,8 +283,9 @@ class EnhancedTable extends React.Component {
 
     render() {
         // console.log(this.state.data[this.state.selected]);
-        const { classes, title} = this.props;
-        const { data, order, orderBy, selected, rowsPerPage, page, columnData } = this.state;
+        const { classes, title, columnData} = this.props;
+        const { data,  order, orderBy, selected, rowsPerPage, page } = this.state;
+        console.log(data);
         if (this.state.data.length <= 0) { return <div> </div> } else {
             return (
                 <Paper className={classes.root}>
@@ -305,25 +304,28 @@ class EnhancedTable extends React.Component {
                             <TableBody>
                                 {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((n,i) => {
                                     const isSelected = this.isSelected(i);
+                                    let newLabel = columnData[0].id;
+                                    console.log(n);
+                                    // console.log(columnData[0].id);
                                     return (
                                         <TableRow
                                             hover
-                                            onClick={event => this.handleClick(event, n._id, i)}
-                                            onKeyDown={event => this.handleKeyDown(event, n._id, i)}
+                                            onClick={event => this.handleClick(event, n['id'], i)}
+                                            onKeyDown={event => this.handleKeyDown(event, n['id'], i)}
                                             role="checkbox"
                                             aria-checked={isSelected}
                                             tabIndex={-1}
-                                            key={n._id}
+                                            key={i}
                                             selected={isSelected}
                                         >
                                             <TableCell padding="checkbox">
                                                 <Checkbox checked={isSelected} />
                                             </TableCell>
-                                            <TableCell padding="none">{n.fiscal || n.nombre || n.agente}</TableCell>
-                                            <TableCell numeric>{ n.telf || n.tlf }</TableCell>
-                                            <TableCell padding="none">{ !n.cliente ? n.web ? n.web : n.objetivo ? n.objetivo : '' : n._id }</TableCell>
-                                            <TableCell numeric>{ (n.negocios ? n.negocios.length : n.cliente ) }</TableCell>
-                                            <TableCell numeric>{ (n.tareas ? n.tareas.length : n.ciudad ) }</TableCell>
+                                            <TableCell padding="none">{n[columnData[0].id]} </TableCell>
+                                            <TableCell numeric>{n[columnData[1].id]}</TableCell>
+                                            <TableCell padding="none">{n[columnData[2].id]}</TableCell>
+                                            <TableCell numeric>{n[columnData[3].id]}</TableCell>
+                                            <TableCell numeric>{n[columnData[4].id]}</TableCell>
                                         </TableRow>
                                     );
                                 })}
@@ -347,7 +349,7 @@ class EnhancedTable extends React.Component {
 
 EnhancedTable.propTypes = {
     classes: PropTypes.object.isRequired,
-    datos: PropTypes.array.isRequired,
+    data: PropTypes.array.isRequired,
     columnData: PropTypes.array.isRequired,
     title: PropTypes.string.isRequired
 };
