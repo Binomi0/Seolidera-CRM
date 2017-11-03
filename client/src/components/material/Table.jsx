@@ -20,24 +20,17 @@ import Typography from 'material-ui/Typography';
 import Paper from 'material-ui/Paper';
 import Checkbox from 'material-ui/Checkbox';
 import IconButton from 'material-ui/IconButton';
+import TextField from 'material-ui/TextField';
 import Tooltip from 'material-ui/Tooltip';
+import Input, { InputLabel } from 'material-ui/Input';
+import Select from 'material-ui/Select';
+import { MenuItem } from 'material-ui/Menu';
+import { FormControl, FormHelperText } from 'material-ui/Form';
 import DeleteIcon from 'material-ui-icons/Delete';
 import EditIcon from 'material-ui-icons/Edit';
 import ViewIcon from 'material-ui-icons/RemoveRedEye';
 import SearchIcon from 'material-ui-icons/Search';
-import FilterListIcon from 'material-ui-icons/FilterList';
-
-// function createData(id, nombre, telf, activo, negocios,tareas) {
-//     return { id, nombre, telf, activo, negocios, tareas };
-// }
-
-// const columnData = [
-//     { id: 'nombre', numeric: false, disablePadding: true, label: 'Nombre ' },
-//     { id: 'telefono', numeric: true, disablePadding: false, label: 'Teléfono' },
-//     { id: 'activo', numeric: false, disablePadding: false, label: 'Activo' },
-//     { id: 'pedidos', numeric: false, disablePadding: false, label: 'Pedidos' },
-//     { id: 'tareas', numeric: false, disablePadding: false, label: 'Tareas' },
-// ];
+import YoutubeSearched from 'material-ui-icons/YoutubeSearchedFor';
 
 class EnhancedTableHead extends React.Component {
     static propTypes = {
@@ -93,6 +86,17 @@ class EnhancedTableHead extends React.Component {
 }
 
 const toolbarStyles = theme => ({
+    selectEmpty: {
+        marginTop: theme.spacing.unit * 2,
+    },
+    container: {
+        display: 'flex',
+        flexWrap: 'wrap',
+    },
+    formControl: {
+        margin: theme.spacing.unit,
+        minWidth: 120,
+    },
     root: {
         paddingRight: 2,
     },
@@ -115,11 +119,16 @@ const toolbarStyles = theme => ({
     title: {
         flex: '0 0 auto',
     },
+    textField: {
+        marginLeft: theme.spacing.unit,
+        marginRight: theme.spacing.unit,
+        width: 300,
+    }
 });
 
 let EnhancedTableToolbar = props => {
     // console.log(props);
-    const { numSelected, classes, itemClicked } = props;
+    const { numSelected, classes, itemClicked, text, handleTextChange, showSearch, search, select, changeSelect, filters } = props;
 
     function selectItemClicked(item) {
         itemClicked(item)
@@ -161,16 +170,50 @@ let EnhancedTableToolbar = props => {
                     </div>
                 ) : (
                     <div style={{display: 'flex'}}>
-                        <Tooltip title="Buscar">
-                            <IconButton aria-label="Buscar">
-                                <SearchIcon />
-                            </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Filtrar Lista">
-                            <IconButton aria-label="Filtrar Lista">
-                                <FilterListIcon />
-                            </IconButton>
-                        </Tooltip>
+                        {
+                            search ? <div style={{display: 'flex'}}>
+                                <form className={classes.container} autoComplete="off">
+                                    <FormControl className={classes.formControl}>
+                                        <InputLabel htmlFor="columns">Filtrar por</InputLabel>
+                                        <Select
+                                            value={select}
+                                            onChange={(e) => changeSelect(e)}
+                                            input={<Input id="columns" />}
+                                        >
+                                            {
+                                                filters.map((item, index) => {
+                                                    if (index > 0) {
+                                                        return <MenuItem key={index} value={item} >{item}</MenuItem>
+                                                    } else return null
+
+                                                })
+                                            }
+                                        </Select>
+                                    </FormControl>
+                                    <TextField
+                                        id="text"
+                                        label="Escribir aquí..."
+                                        className={classes.textField}
+                                        value={text}
+                                        onChange={(e) => handleTextChange(e)}
+                                        helperText={`Se filtrarán los resultados por ${select.toUpperCase()}`}
+                                        // margin="normal"
+                                    />
+                                </form>
+                                <Tooltip title="Ocultar">
+                                    <IconButton aria-label="Ocultar" onClick={() => showSearch()}>
+                                        <YoutubeSearched />
+                                </IconButton>
+                            </Tooltip>
+                            </div>
+                            : <div style={{display: 'flex'}}>
+                                <Tooltip title="Buscar">
+                                    <IconButton aria-label="Buscar" onClick={() => showSearch()}>
+                                        <SearchIcon />
+                                    </IconButton>
+                                </Tooltip>
+                            </div>
+                        }
                     </div>
                 )}
             </div>
@@ -208,9 +251,13 @@ class EnhancedTable extends React.Component {
             selected: -1,
             data: [],
             page: 0,
+            page: 0,
             rowsPerPage: 5,
+            text: '',
+            search: false,
+            select: 'nombre'
         };
-        this.itemClicked = this.itemClicked.bind(this)
+        this.itemSelected = this.itemSelected.bind(this)
     }
 
     componentWillMount() {
@@ -218,7 +265,15 @@ class EnhancedTable extends React.Component {
         console.log('Montando tabla con: ', data);
         let newArray = [];
         for (let i = 0; i < data.length; i++) {
-            let datos = { id: data[0][i]['id'], [columnData[0]['id']]: data[0][i][columnData[0]['id']], [columnData[1]['id']]: data[0][i][columnData[1]['id']], [columnData[2]['id']]: data[0][i][columnData[2]['id']] === true ? 'Si' : 'No', [columnData[3]['id']]: data[0][i][columnData[3]['id']].length, [columnData[4]['id']]: data[0][i][columnData[4]['id']].length }
+            // console.log(typeof data[0][i][columnData[2]['id']], data[0][i][columnData[2]['id']]);
+            let datos = {
+                id: data[0][i]['id'],
+                [columnData[0]['id']]: data[0][i][columnData[0]['id']],
+                [columnData[1]['id']]: data[0][i][columnData[1]['id']],
+                [columnData[2]['id']]: data[0][i][columnData[2]['id']],
+                [columnData[3]['id']]: typeof data[0][i][columnData[3]['id']] === 'string' ? data[0][i][columnData[3]['id']] : typeof data[0][i][columnData[3]['id']] === 'object' ? data[0][i][columnData[3]['id']].length : '',
+                [columnData[4]['id']]: typeof data[0][i][columnData[4]['id']] === 'string' ? data[0][i][columnData[4]['id']] : typeof data[0][i][columnData[4]['id']] === 'object' ? data[0][i][columnData[4]['id']].length : ''
+            };
             newArray.push(datos);
         }
         this.setState({ data: newArray })
@@ -278,19 +333,38 @@ class EnhancedTable extends React.Component {
     //     this.props.itemSelected(e)
     // }
 
-    itemClicked(item) {
+    itemSelected(item) {
         this.props.itemSelected(item)
     }
+
+    handleTextChange = (evt) => {
+        this.setState({ text: evt.target.value })
+    };
+
+    showSearch = () => this.setState({ search: !this.state.search });
+
+    changeSelect = (evt) => { this.setState({ select: evt.target.value }) };
 
     render() {
         // console.log(this.state.data[this.state.selected]);
         const { classes, title, columnData} = this.props;
-        const { data,  order, orderBy, selected, rowsPerPage, page } = this.state;
-        console.log(data);
+        const { data,  order, orderBy, selected, rowsPerPage, page, select } = this.state;
         if (this.state.data.length <= 0) { return <div> </div> } else {
             return (
                 <Paper className={classes.root}>
-                    <EnhancedTableToolbar numSelected={selected} title={title} data={data} itemClicked={this.itemClicked} />
+                    <EnhancedTableToolbar
+                        numSelected={selected}
+                        title={title}
+                        data={data}
+                        itemClicked={this.itemSelected}
+                        text={this.state.text}
+                        handleTextChange={this.handleTextChange.bind(this)}
+                        search={ this.state.search }
+                        showSearch={this.showSearch.bind(this)}
+                        select={this.state.select}
+                        changeSelect={this.changeSelect.bind(this)}
+                        filters={Object.keys(data[0])}
+                    />
                     <div className={classes.tableWrapper}>
                         <Table>
                             <EnhancedTableHead
@@ -303,11 +377,10 @@ class EnhancedTable extends React.Component {
                                 columnData={columnData}
                             />
                             <TableBody>
-                                {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((n,i) => {
+                                {data.filter((t) => {
+                                    return t[select].toLowerCase().indexOf(this.state.text.toLowerCase()) > -1
+                                }).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((n,i) => {
                                     const isSelected = this.isSelected(i);
-                                    let newLabel = columnData[0].id;
-                                    console.log(n);
-                                    // console.log(columnData[0].id);
                                     return (
                                         <TableRow
                                             hover
@@ -323,12 +396,12 @@ class EnhancedTable extends React.Component {
                                                 <Checkbox checked={isSelected} />
                                             </TableCell>
                                             <TableCell padding="none">{n[columnData[0].id]} </TableCell>
-                                            <TableCell numeric>{n[columnData[1].id]}</TableCell>
+                                            <TableCell padding="none">{n[columnData[1].id]}</TableCell>
                                             <TableCell padding="none">{n[columnData[2].id]}</TableCell>
-                                            <TableCell numeric>{n[columnData[3].id]}</TableCell>
-                                            <TableCell numeric>{n[columnData[4].id]}</TableCell>
+                                            <TableCell padding="none">{n[columnData[3].id]}</TableCell>
+                                            <TableCell padding="none">{n[columnData[4].id]}</TableCell>
                                         </TableRow>
-                                    );
+                                    )
                                 })}
                             </TableBody>
                             <TableFooter>

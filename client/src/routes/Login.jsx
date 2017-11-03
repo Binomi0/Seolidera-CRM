@@ -1,13 +1,14 @@
 import React from 'react'
-import { Redirect } from 'react-router-dom'
 
 
 export default class Login extends React.Component {
-    state = {
-        redirectToReferrer: false,
-        name: '',
-        pasw: '',
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            name: '',
+            pasw: '',
+        };
+    }
 
     login = () => {
         let accesos = {
@@ -17,38 +18,24 @@ export default class Login extends React.Component {
         let { name, pasw } = this.state;
 
         if (accesos.name === name && accesos.pasw === pasw) {
-            console.log('Acceso concedido');
-            this.setState({ redirectToReferrer: true })
+            // console.log('Acceso concedido');
+            this.props.autenticacionUsuario(name)
         } else {
-            console.log('Acceso denegado')
+            alert('Acceso denegado')
         }
     };
 
-    updateName(e) {
-        this.setState({ name: e.target.value })
-    }
-
-    updatePasw(e) {
-        this.setState({ pasw: e.target.value })
-    }
-
     render () {
-        console.log(this.props.location.state);
-        const { from } = this.props.location.state || { from: { pathname: `/home/${this.state.name}` } };
-        const { redirectToReferrer } = this.state;
-
-        if (redirectToReferrer) {
-            return (
-                <Redirect to={from}/>
-            )
-        }
 
         return (
             <div className="login-page">
                 <div className="login-form">
-                        <input type="text" onChange={(e) => this.updateName(e)} placeholder="Usuario"/>
-                        <input type="password" onChange={(e) => this.updatePasw(e)} placeholder="Contraseña"/>
-                        <button onClick={this.login}>Acceder</button>
+                    <h1>Formulario de Acceso</h1>
+                    <input type="text" onChange={(e) => this.setState({ name: e.target.value })} placeholder="Usuario"/>
+                    <br/>
+                    <input type="password" onChange={(e) => this.setState({ pasw: e.target.value })} placeholder="Contraseña"/>
+                    <br/>
+                    <button onClick={this.login.bind(this)}>Acceder</button>
                 </div>
             </div>
         )

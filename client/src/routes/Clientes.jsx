@@ -3,11 +3,12 @@ import Header from '../components/Header';
 import Table from '../components/material/Table';
 import Button from 'material-ui/Button';
 import CloseIcon from 'material-ui-icons/Close';
+import Detalles from '../components/Detalles';
 // import Tareas from "./Tareas";
 import Crear from '../components/Crear';
 // import { Redirect } from 'react-router-dom';
 
-class Usuarios extends Component {
+class Clientes extends Component {
     constructor() {
         super();
         this.state = {
@@ -15,6 +16,7 @@ class Usuarios extends Component {
             tabla: [],
             editando: false,
             selected: '',
+            text: ''
         };
         // this.obtenerDatos = this.obtenerDatos.bind(this);
     }
@@ -56,7 +58,13 @@ class Usuarios extends Component {
         this.setState({ selected: client, editando: true })
     }
 
+    changeText(text) {
+        console.log('TEXT:',text);
+        this.setState({ text })
+    }
+
     render() {
+
         // console.log(this.props);
         let { usuarios, selected, columnData, tabla } = this.state;
         let cliente;
@@ -65,30 +73,27 @@ class Usuarios extends Component {
         }
         return (
             <div>
-                <Header title="Clientes" />
-
                 {
                     this.state.selected !== 'undefined' && cliente ? (
-                        <ul>
-                            <Button style={{float: 'right'}} raised color="accent" onClick={() => this.setState({ editando: false, selected: -1 })} >
-                                <CloseIcon />
-                            </Button>
-                            {/*<Button style={{marginBottom: '1em'}} raised onClick={() => this.setState({ selected: -1 })}>Cerrar</Button>*/}
-                            <li>{cliente.alta} </li>
-                            <li>{cliente.nombre} </li>
-                            <li>{cliente.apellidos} </li>
-                            <li>{cliente.fiscal} </li>
-                            <li>{cliente.telf} </li>
-                            <li>{cliente.email} </li>
-                            <li>{cliente.direccion} </li>
-                            <li>{cliente.provincia} </li>
-                            <li>{cliente.postal} </li>
-                            <li>{cliente.alta} </li>
-                            <li>{cliente.dni} </li>
-                            <li>{cliente.observaciones} </li>
-                            <li>{cliente.buser} </li>
-                            <li>{cliente.bpasw} </li>
-                        </ul>
+                        <div>
+                            <ul>
+                                <Button style={{float: 'right'}} raised color="accent" onClick={() => this.setState({ editando: false, selected: -1 })} >
+                                    <CloseIcon />
+                                </Button>
+                                <Detalles cliente={cliente} />
+                                {/*<Button style={{marginBottom: '1em'}} raised onClick={() => this.setState({ selected: -1 })}>Cerrar</Button>*/}
+
+                            </ul>
+                            <div>
+
+                            </div>
+                            <div>
+
+                            </div>
+                            <div>
+
+                            </div>
+                        </div>
                     ) :
                         ''
                 }
@@ -104,6 +109,7 @@ class Usuarios extends Component {
                                         columnData={columnData}
                                         title="Cliente"
                                         itemSelected={this.itemSelected.bind(this)}
+                                        changeText={this.changeText.bind(this)}
                                     />
                                 )
                             }
@@ -124,4 +130,4 @@ class Usuarios extends Component {
     }
 }
 
-export default Usuarios;
+export default Clientes;

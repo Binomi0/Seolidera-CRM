@@ -25,6 +25,7 @@ const styles = theme => ({
 
 function ButtonAppBar(props) {
     const classes = props.classes;
+
     return (
         <div className={classes.root}>
             <AppBar position="static">
@@ -35,7 +36,18 @@ function ButtonAppBar(props) {
                     <Typography type="title" color="inherit" className={classes.flex}>
                         {props.title}
                     </Typography>
-                    <Button color="contrast" href="/login">Salir</Button>
+                    {
+                        props.user
+                            ? <Typography type="title" color="inherit" className={classes.flex}>
+                                    {props.user.toUpperCase()}
+                                </Typography>
+                            : ''
+                    }
+                    {
+                        props.user
+                            ? <Button color="contrast" onClick={() => props.logout()} >Salir</Button>
+                            : ''
+                    }
                 </Toolbar>
             </AppBar>
         </div>

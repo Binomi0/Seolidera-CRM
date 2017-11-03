@@ -70,7 +70,7 @@ class Llamadas extends Component {
                             <Table
                                 data={tabla}
                                 columnData={columnData}
-                                title="Llamadas"
+                                title="Llamada"
                                 itemSelected={this.itemSelected.bind(this)}
                             />
                         </div>

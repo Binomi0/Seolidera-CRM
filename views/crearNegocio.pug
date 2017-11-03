@@ -23,6 +23,13 @@ block content
 		br
 		input(type="text" name="web" id="web" placeholder="Introduce una URL" required class="form-input")
 		br
+		label(for="renovacion") Seleccionar Renovación:
+		select#renovacion(name='renovacion')
+			option(value='1', selected= true) Mensual
+			option(value='3') Trimestral
+			option(value='6') Semestral
+			option(value='12') Anual
+
 		//label(for="horainicio") Hora Apertura:
 		//input(type="number" id="horainicio" min="1" max="23" name="horario" placeholder="8" required class="form-input")
 		//label(for="minutoinicio")
@@ -49,4 +56,4 @@ block content
 		//br
 		//input(type='file' name='fotos' id='fotos' multiple accept=".jpg, .jpeg, .png")
 		br
-		input(type="submit" value="Nuevo Negocio")
+		input(type="submit" value="Agregar Nuevo Negocio")

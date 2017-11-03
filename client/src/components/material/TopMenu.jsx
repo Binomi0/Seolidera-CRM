@@ -10,7 +10,7 @@ const styles = theme => ({
     },
     input: {
         display: 'none',
-    },
+    }
 });
 
 function RaisedButtons(props) {
@@ -18,11 +18,11 @@ function RaisedButtons(props) {
     return (
         <nav>
             <div style={{ display: 'flex', justifyContent: 'center' }} >
-                <MyButton toUrl="/clientes" route="Clientes" classes={classes.button}/>
-                <MyButton toUrl="/negocios" route="Negocios" classes={classes.button}/>
-                <MyButton toUrl="/tareas" route="Tareas" classes={classes.button}/>
-                <MyButton toUrl="/llamadas" route="Llamadas" classes={classes.button}/>
-                <MyButton toUrl="/ayuda" route="Ayuda" classes={classes.button}/>
+                <MyButton changeRoute={props.changeRoute} route="Clientes" classes={classes.button} />
+                <MyButton changeRoute={props.changeRoute} route="Negocios" classes={classes.button} />
+                <MyButton changeRoute={props.changeRoute} route="Tareas" classes={classes.button} />
+                <MyButton changeRoute={props.changeRoute} route="Llamadas" classes={classes.button} />
+                <MyButton changeRoute={props.changeRoute} route="Ayuda" classes={classes.button} />
             </div>
         </nav>
     );

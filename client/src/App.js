@@ -1,41 +1,57 @@
 import React, { Component } from 'react';
 import './App.css';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
-import Clientes from './routes/Clientes';
-import Negocios from './routes/Negocios';
-import Tareas from './routes/Tareas';
-import Llamadas from './routes/Llamadas';
-import Ayuda from './routes/Ayuda';
-import Home from './routes/Home';
+// import Clientes from './routes/Clientes';
+// import Negocios from './routes/Negocios';
+// import Tareas from './routes/Tareas';
+// import Llamadas from './routes/Llamadas';
+// import Ayuda from './routes/Ayuda';
+// import Home from './routes/Home';
 import Login from './routes/Login';
+import Header from './components/Header'
+import Clientes from "./routes/Clientes";
 
 class App extends Component {
     state = {
-        route: "Home"
+        route: "Home",
+        user: ''
     };
 
     componentWillMount(){
-        if (window.location.href === "http://localhost:3000/") {
-            console.log('Ruta: Home')
-        } else {
-            console.log(window.location.href)
-        }
+        let user = sessionStorage.getItem('user');
+        if (user) this.setState({ user });
     }
+
+    autenticacionUsuario(user) {
+        sessionStorage.setItem('user', user);
+        this.setState({ user })
+    }
+
+    loggedIn = () => <Clientes />;
+
+    logout = () => {
+        sessionStorage.removeItem('user')
+        this.setState({ user: null })
+    };
+
+    notLogged = () => <Login autenticacionUsuario={this.autenticacionUsuario.bind(this)} />;
+
+    changeRoute = (route) => {
+        console.log('RUTA', route);
+        this.setState({ route })
+    };
 
     render() {
         return (
-            <Router>
-                <div className="home">
-                    <Route exact path="/" component={Login} />
-                    <Route path="/home/:user?" component={Home} user="" staticContext="algo" />
-                    <Route path="/clientes" component={Clientes} user="" staticContext="algo"/>
-                    <Route path="/negocios" component={Negocios} />
-                    <Route path="/llamadas" component={Llamadas} />
-                    <Route path="/tareas" component={Tareas} />
-                    <Route path="/ayuda" component={Ayuda} />
-                    <Route path="/login" component={Login} />
-                </div>
-            </Router>
+            <div className="home">
+                <Header
+                    user={this.state.user}
+                    title={this.state.route}
+                    route={this.state.route}
+                    changeRoute={this.changeRoute.bind(this)}
+                    logout={() => this.logout()}
+                />
+                { this.state.user ? this.loggedIn() : this.notLogged() }
+            </div>
         );
     }
 }

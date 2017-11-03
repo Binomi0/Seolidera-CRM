@@ -20,12 +20,13 @@ class Pedidos extends Component {
         let newArray= [], datos;
         let columnData = [
             { id: 'nombre', numeric: false, disablePadding: true, label: 'Nombre' },
-            { id: 'tlf', numeric: false, disablePadding: false, label: 'Teléfono' },
-            { id: 'web', numeric: false, disablePadding: false, label: 'Sitio Web' },
-            { id: 'cliente', numeric: false, disablePadding: false, label: 'Código de Cliente' },
-            { id: 'ciudad', numeric: false, disablePadding: false, label: 'Ciudad' },
+            { id: 'tlf', numeric: false, disablePadding: true, label: 'Teléfono' },
+            { id: 'web', numeric: false, disablePadding: true, label: 'Sitio Web' },
+            { id: 'cliente', numeric: false, disablePadding: true, label: 'Código de Cliente' },
+            { id: 'ciudad', numeric: false, disablePadding: true, label: 'Ciudad' },
         ];
-        fetch('/negocios')
+
+        fetch(`/negocios`)
             .then(res => res.json())
             .then(negocios => {
                 datos = negocios.map((negocio, index) => {
@@ -96,7 +97,7 @@ class Pedidos extends Component {
                                 <Table // no se por qué no funsiona el boton + en tareas
                                     data={tabla}
                                     columnData={columnData}
-                                    title="Negocios"
+                                    title="Negocio"
                                     itemSelected={this.itemSelected.bind(this)} // para recuperar el item seleccionado
                                 />
                         }
