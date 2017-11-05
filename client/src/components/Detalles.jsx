@@ -57,7 +57,12 @@ const styles = theme => ({
 });
 
 class RecipeReviewCard extends React.Component {
-    state = { expanded: false, callsExpanded: false, negociosExpanded: false, tareasExpanded: false };
+    state = {
+        expanded: false,
+        callsExpanded: false,
+        negociosExpanded: false,
+        tareasExpanded: false
+    };
 
     handleExpandClick = (item) => {
         this.setState({ [item]: !this.state[item] });
@@ -83,9 +88,6 @@ class RecipeReviewCard extends React.Component {
                         title={`${cliente.nombre} ${cliente.apellidos} `}
                         subheader={`Alta: ` + new Date(cliente.alta).toLocaleDateString('es-ES', options)}
                     />
-                    <CardContent>
-
-                    </CardContent>
                     <CardActions disableActionSpacing>
                         <Tooltip title="Ver Negocios" placement="top-start" enterDelay={300}>
                             <IconButton
@@ -292,7 +294,6 @@ class RecipeReviewCard extends React.Component {
                                 }
                         </CardContent>
                     </Collapse>
-
                 </Card>
             </div>
         );

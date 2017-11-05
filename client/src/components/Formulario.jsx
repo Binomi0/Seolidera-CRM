@@ -4,6 +4,12 @@ import TextField from 'material-ui/TextField';
 import { withStyles } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
+import Dialog, {
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+} from 'material-ui/Dialog';
 
 const styles = theme => ({
     button: {
@@ -40,8 +46,10 @@ class Formulario extends React.Component {
             tipo: 'cliente',
             buser: '',
             bpasw: Math.random().toString(36).slice(-8),
-            sendDisabled: false
+            sendDisabled: false,
+            dialogOpen: false
         }
+        // this.sendForm = this.sendForm.bind(this)
     }
 
     componentWillMount() {
@@ -63,8 +71,20 @@ class Formulario extends React.Component {
         }
     }
 
+    confirmForm() {
+        this.setState({ dialogOpen: true });
+    }
+
+    handleRequestClose(accepted) {
+        if (!accepted) {
+            this.setState({ dialogOpen: accepted })
+        } else {
+            this.setState({ dialogOpen: false , sendDisabled: true })
+            this.sendForm()
+        }
+    }
+
     sendForm() {
-        this.setState({ sendDisabled: true });
         let datos = this.state;
         let { nuevoCliente, editarCliente, action } = this.props;
         fetch('/api/clientes/nuevo', {
@@ -91,6 +111,23 @@ class Formulario extends React.Component {
                 <Typography type="display1" gutterBottom>
                     { action === 'editar' ? 'Editando cliente' : 'Añadir nuevo cliente'}
                 </Typography>
+                <Dialog open={this.state.dialogOpen} onRequestClose={this.handleRequestClose.bind(this, false)}>
+                    <DialogTitle>{"Use Google's location service?"}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Let Google help apps determine location. This means sending anonymous location data to
+                            Google, even when no apps are running.
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.handleRequestClose.bind(this, false)} color="primary">
+                            Disagree
+                        </Button>
+                        <Button onClick={this.handleRequestClose.bind(this, true)} color="primary" autoFocus>
+                            Agree
+                        </Button>
+                    </DialogActions>
+                </Dialog>
                 <form className={classes.container} noValidate autoComplete="off">
                     <TextField
                         id="nombre"
@@ -197,7 +234,7 @@ class Formulario extends React.Component {
                         onChange={(e) => this.handleChange(e, 'observaciones')}
                         margin="normal"
                     />
-                    <Button raised color="primary" className={classes.button} onClick={this.sendForm.bind(this)} disabled={this.state.sendDisabled}>
+                    <Button raised color="primary" className={classes.button} onClick={this.confirmForm.bind(this)} disabled={this.state.sendDisabled}>
                         { action === 'editar' ? 'Editar cliente' : 'Añadir nuevo cliente'}
                     </Button>
                 </form>

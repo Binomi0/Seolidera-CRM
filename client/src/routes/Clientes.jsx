@@ -1,16 +1,16 @@
-import React, { Component } from 'react';
+// import { Redirect } from 'react-router-dom';
 // import Header from '../components/Header';
+// import Tareas from "./Tareas";
+// import Typography from 'material-ui/Typography';
+import React, { Component } from 'react';
 import Table from '../components/material/Table';
 import Button from 'material-ui/Button';
 import CloseIcon from 'material-ui-icons/Close';
 import Detalles from '../components/Detalles';
-// import Tareas from "./Tareas";
 import Crear from '../components/Crear';
 import Formulario from "../components/Formulario";
 import { LinearProgress } from 'material-ui/Progress';
-// import Typography from 'material-ui/Typography';
 
-// import { Redirect } from 'react-router-dom';
 
 
 const columnData = [
@@ -29,9 +29,10 @@ class Clientes extends Component {
             tabla: [],
             selected: '',
             text: '',
-            viewDetails: false,
+            viewClient: false,
             newClient: false,
-            editClient: false
+            editClient: false,
+            dialogOpen: false
         };
         this.loadResources = this.loadResources.bind(this);
     }
@@ -60,20 +61,21 @@ class Clientes extends Component {
                         tareas: usuario.tareas
                     };
                     newArray.push(data);
-                    return newArray
+                    return data
                 });
                 console.log(datos);
-                this.setState({ usuarios, tabla: newArray, columnData })
+                console.log(newArray);
+                this.setState({ usuarios, tabla: datos, columnData })
             });
     }
 
     itemSelected(client, action) {
         switch (action) {
             case 'ver':
-                this.setState({ selected: client, viewDetails: true, newClient: false, editClient: false });
+                this.setState({ selected: client, viewClient: true, newClient: false, editClient: false });
                 break;
             case 'editar':
-                this.setState({ selected: client, viewDetails: false, newClient: false, editClient: true })  ;
+                this.setState({ selected: client, viewClient: false, newClient: false, editClient: true })  ;
                 break;
             default:
                 break;
@@ -85,7 +87,7 @@ class Clientes extends Component {
     }
 
     nuevoCliente(usuario) {
-        console.log('RESPUESTA:', usuario);
+        // console.log('RESPUESTA:', usuario);
         let data = {
             id: this.state.tabla.length,
             nombre: usuario.result.nombre,
@@ -96,14 +98,14 @@ class Clientes extends Component {
         };
         let newArray = this.state.tabla;
         newArray.push(data);
-        this.setState({ editClient: false, newClient: false, viewDetails: false, tabla: newArray });
+        this.setState({ editClient: false, newClient: false, viewClient: false, tabla: newArray });
     }
 
     editarCliente(cliente) {
         let { tabla, usuarios, selected } = this.state;
         tabla[selected] = cliente.result;
         usuarios[selected] = cliente.result;
-        this.setState({ editClient: false, newClient: false, viewDetails: false, tabla, usuarios });
+        this.setState({ editClient: false, newClient: false, viewClient: false, tabla, usuarios });
 
     }
 
@@ -115,15 +117,16 @@ class Clientes extends Component {
 
         return (
             <div>
+
                 {
-                    this.state.newClient || this.state.editClient || this.state.viewDetails
-                        ? <Button style={{float: 'right'}} raised color="accent" onClick={() => this.setState({ newClient: false, viewDetails: false, editClient: false })} >
+                    this.state.newClient || this.state.editClient || this.state.viewClient
+                        ? <Button style={{float: 'right'}} raised color="accent" onClick={() => this.setState({ newClient: false, viewClient: false, editClient: false })} >
                         <CloseIcon />
                     </Button>
                         :  ''
                 }
                 {
-                    this.state.selected !== 'undefined' && cliente && this.state.viewDetails
+                    this.state.selected !== 'undefined' && cliente && this.state.viewClient
                         ?  this.mostrarDetalles(cliente)
                         :  ''
                 }
@@ -131,7 +134,7 @@ class Clientes extends Component {
                     this.state.tabla.length > 0 && columnData
                         ? <div style={{margin: 10}}>
                             {
-                                this.state.editClient || this.state.viewDetails || this.state.newClient
+                                this.state.editClient || this.state.viewClient || this.state.newClient
                                     ? ''
                                     : <Table
                                         data={tabla}
@@ -165,10 +168,10 @@ class Clientes extends Component {
                     : ''
                 }
                 {
-                    this.state.newClient || this.state.editClient || this.state.viewDetails
+                    this.state.newClient || this.state.editClient || this.state.viewClient
                         ? ''
                         :  <Crear
-                        addClient={() => this.setState({ newClient: true, viewDetails: false, editClient: false })}
+                        addClient={() => this.setState({ newClient: true, viewClient: false, editClient: false })}
                         route="Cliente"
                     />
                 }

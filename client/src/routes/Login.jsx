@@ -17,7 +17,7 @@ export default class Login extends React.Component {
         };
         let { name, pasw } = this.state;
 
-        if (accesos.name === name && accesos.pasw === pasw) {
+        if (accesos.name === name.toLowerCase() && accesos.pasw === pasw) {
             // console.log('Acceso concedido');
             this.props.autenticacionUsuario(name)
         } else {
