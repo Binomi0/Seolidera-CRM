@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Header from '../components/Header';
+// import Header from '../components/Header';
 import Table from '../components/material/Table';
 import Button from 'material-ui/Button';
 import CloseIcon from 'material-ui-icons/Close';
@@ -7,6 +7,9 @@ import Detalles from '../components/Detalles';
 // import Tareas from "./Tareas";
 import Crear from '../components/Crear';
 import Formulario from "../components/Formulario";
+import { LinearProgress } from 'material-ui/Progress';
+// import Typography from 'material-ui/Typography';
+
 // import { Redirect } from 'react-router-dom';
 
 
@@ -24,10 +27,11 @@ class Clientes extends Component {
         this.state = {
             usuarios: [],
             tabla: [],
-            viewDetails: false,
             selected: '',
             text: '',
-            newClient: false
+            viewDetails: false,
+            newClient: false,
+            editClient: false
         };
         this.loadResources = this.loadResources.bind(this);
     }
@@ -62,9 +66,17 @@ class Clientes extends Component {
             });
     }
 
-    itemSelected(client) {
-        console.log('cliente seleccionado', client);
-        this.setState({ selected: client, viewDetails: true, newClient: false })
+    itemSelected(client, action) {
+        switch (action) {
+            case 'ver':
+                this.setState({ selected: client, viewDetails: true, newClient: false, editClient: false });
+                break;
+            case 'editar':
+                this.setState({ selected: client, viewDetails: false, newClient: false, editClient: true })  ;
+                break;
+            default:
+                break;
+        }
     }
 
     changeText(text) {
@@ -82,68 +94,74 @@ class Clientes extends Component {
         };
         let newArray = this.state.tabla;
         newArray.push(data);
-        this.setState({ newClient: false, viewDetails: false, tabla: newArray });
+        this.setState({ editClient: false, newClient: false, viewDetails: false, tabla: newArray });
     }
 
-    mostrarDetalles = cliente =>
-        <div>
-            <ul>
-                <Button style={{float: 'right'}} raised color="accent" onClick={() => this.setState({ viewDetails: false, newClient: false, selected: -1 })} >
-                    <CloseIcon />
-                </Button>
-                <Detalles cliente={cliente} />
-                {/*<Button style={{marginBottom: '1em'}} raised onClick={() => this.setState({ selected: -1 })}>Cerrar</Button>*/}
-            </ul>
-        </div>;
-
+    mostrarDetalles = cliente =>  <Detalles cliente={cliente} />;
 
     render() {
         let { usuarios, selected, tabla } = this.state;
         let cliente = usuarios[selected] || null;
-        // if (!usuarios) { return } else {
-        //     cliente = usuarios[selected];
-        // }
+
         return (
-            <div>
+            <div>HOla
                 {
-                    this.state.selected !== 'undefined' && cliente && !this.state.newClient && this.state.viewDetails ? (
-                        this.mostrarDetalles(cliente)
-                    ) :
-                        ''
+                    this.state.newClient || this.state.editClient || this.state.viewDetails
+                        ? <Button style={{float: 'right'}} raised color="accent" onClick={() => this.setState({ newClient: false, viewDetails: false, editClient: false })} >
+                        <CloseIcon />
+                    </Button>
+                        :  ''
+                }
+                {
+                    this.state.selected !== 'undefined' && cliente && this.state.viewDetails
+                        ?  this.mostrarDetalles(cliente)
+                        :  ''
                 }
                 {
                     this.state.tabla.length > 0 && columnData
-                    ? <div style={{margin: 10}}>
+                        ? <div style={{margin: 10}}>
                             {
-                                !this.state.newClient && !this.state.viewDetails ?
-                                    (
-                                        <Table
-                                            data={tabla}
-                                            columnData={columnData}
-                                            title="Cliente"
-                                            itemSelected={this.itemSelected.bind(this)}
-                                            changeText={this.changeText.bind(this)}
-                                        />
-                                    )
-                                    : <div> </div>
+                                this.state.editClient || this.state.viewDetails || this.state.newClient
+                                    ? ''
+                                    : <Table
+                                        data={tabla}
+                                        columnData={columnData}
+                                        title="Cliente"
+                                        itemSelected={this.itemSelected.bind(this)}
+                                        changeText={this.changeText.bind(this)}
+                                />
                             }
-                            {
-                                !this.state.newClient ? (
-                                    <Crear
-                                        addClient={() => this.setState({ newClient: true, viewDetails: false })}
-                                        route="Cliente"
-                                    />
-                                ) : <div>
-                                        <Button style={{float: 'right'}} raised color="accent" onClick={() => this.setState({ newClient: false, viewDetails: false })} >
-                                            <CloseIcon />
-                                        </Button>
-                                        <Formulario formularioEnviado={this.formularioEnviado.bind(this)} />
-                                    </div>
-                            }
-                        </div>
-                    : 'Cargando...'
+                    </div>
+                    : <LinearProgress />
                 }
 
+                {
+                    !this.state.newClient
+                    ?   ''
+                    :   <Formulario
+                            formularioEnviado={this.formularioEnviado.bind(this)}
+                            // cliente={cliente}
+                            action={'ver'}
+                        />
+                }
+
+                {
+                    this.state.editClient
+                    ?   <Formulario
+                            formularioEnviado={this.formularioEnviado.bind(this)}
+                            cliente={cliente}
+                            action={'editar'}
+                        />
+                    : ''
+                }
+                {
+                    this.state.newClient || this.state.editClient || this.state.viewDetails
+                        ? ''
+                        :  <Crear
+                        addClient={() => this.setState({ newClient: true, viewDetails: false, editClient: false })}
+                        route="Cliente"
+                    />
+                }
             </div>
         )
     }

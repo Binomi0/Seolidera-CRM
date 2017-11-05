@@ -25,7 +25,7 @@ import Tooltip from 'material-ui/Tooltip';
 import Input, { InputLabel } from 'material-ui/Input';
 import Select from 'material-ui/Select';
 import { MenuItem } from 'material-ui/Menu';
-import { FormControl, FormHelperText } from 'material-ui/Form';
+import { FormControl } from 'material-ui/Form';
 import DeleteIcon from 'material-ui-icons/Delete';
 import EditIcon from 'material-ui-icons/Edit';
 import ViewIcon from 'material-ui-icons/RemoveRedEye';
@@ -130,8 +130,8 @@ let EnhancedTableToolbar = props => {
     // console.log(props);
     const { numSelected, classes, itemClicked, text, handleTextChange, showSearch, search, select, changeSelect, filters } = props;
 
-    function selectItemClicked(item) {
-        itemClicked(item)
+    function selectItemClicked(item, action) {
+        itemClicked(item, action)
         // view(e)
     }
 
@@ -153,17 +153,17 @@ let EnhancedTableToolbar = props => {
                 {numSelected > -1 ? (
                     <div style={{display: 'flex'}}>
                         <Tooltip title="Ver">
-                            <IconButton aria-label="Ver" onClick={() => selectItemClicked(numSelected)}>
+                            <IconButton aria-label="Ver" onClick={() => selectItemClicked(numSelected, 'ver')}>
                                 <ViewIcon />
                             </IconButton>
                         </Tooltip>
                         <Tooltip title="Editar">
-                            <IconButton aria-label="Editar">
+                            <IconButton aria-label="Editar" onClick={() => selectItemClicked(numSelected, 'editar')}>
                                 <EditIcon />
                             </IconButton>
                         </Tooltip>
                         <Tooltip title="Borrar">
-                            <IconButton aria-label="Borrar">
+                            <IconButton aria-label="Borrar" onClick={() => alert('¡Aquí no se toca!')}>
                                 <DeleteIcon />
                             </IconButton>
                         </Tooltip>
@@ -244,13 +244,11 @@ const styles = theme => ({
 class EnhancedTable extends React.Component {
     constructor(props) {
         super(props);
-        let { data, columnData } = props;
         this.state = {
             order: 'asc',
             orderBy: 'fiscal',
             selected: -1,
             data: [],
-            page: 0,
             page: 0,
             rowsPerPage: 5,
             text: '',
@@ -333,8 +331,8 @@ class EnhancedTable extends React.Component {
     //     this.props.itemSelected(e)
     // }
 
-    itemSelected(item) {
-        this.props.itemSelected(item)
+    itemSelected(item, action) {
+        this.props.itemSelected(item, action)
     }
 
     handleTextChange = (evt) => {

@@ -44,6 +44,16 @@ class Formulario extends React.Component {
         }
     }
 
+    componentWillMount() {
+        console.log(this.props.cliente);
+        if (!this.props.cliente) {
+            return null
+        } else if (this.props.action) {
+            console.log('CLIENTE',this.props.cliente);
+            this.setState({ ...this.props.cliente })
+        }
+    }
+
     handleChange(evt, item) {
         if (item === 'nombre' && evt.target.value.length === 3) {
             console.log(evt.target.value);
@@ -55,9 +65,9 @@ class Formulario extends React.Component {
 
     sendForm() {
         let datos = this.state;
-        let { formularioEnviado } = this.props;
+        let { formularioEnviado, action } = this.props;
         fetch('/api/clientes/nuevo', {
-            method: 'POST',
+            method: action === 'editar' ? 'PUT' : 'POST',
             headers: {
                 'Content-Type': 'application/json; charset=UTF-8',
             },
@@ -70,18 +80,20 @@ class Formulario extends React.Component {
     }
 
     render() {
-        const { classes } = this.props;
+        const { classes, action } = this.props;
+        console.log(this.state);
+        console.log('ACCION',action);
         return (
             <div>
                 <Typography type="display1" gutterBottom>
-                    Añadir nuevo cliente
+                    { action === 'editar' ? 'Editando cliente' : 'Añadir nuevo cliente'}
                 </Typography>
                 <form className={classes.container} noValidate autoComplete="off">
                     <TextField
                         id="nombre"
                         label="Nombre"
                         className={classes.textField}
-                        value={this.state.name}
+                        value={this.state.nombre}
                         onChange={(e) => this.handleChange(e, 'nombre')}
                         margin="normal"
                         autoFocus={true}
@@ -183,7 +195,7 @@ class Formulario extends React.Component {
                         margin="normal"
                     />
                     <Button raised color="primary" className={classes.button} onClick={this.sendForm.bind(this)} disabled={this.state.sendDisabled}>
-                        Añadir Cliente
+                        { action === 'editar' ? 'Editar cliente' : 'Añadir nuevo cliente'}
                     </Button>
                 </form>
             </div>
