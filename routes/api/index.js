@@ -175,6 +175,30 @@ router.post('/:resource/?:action', function (req, res) {
 
 });
 
+router.put('/:resource/:action?', function (req, res) {
+     let resource = req.params.resource;
+     // let action = req.params.action;
+     console.log('ID:',req.body._id);
+     controllers[resource].update(req.body._id, resource, req.body, function (err, result) {
+         if (err) throw err;
+         res.json({ result })
+     })
+});
+
+router.delete('/:resource/:id', function (req, res) {
+    controllers[req.params.resource].delete(req.params.id, function (err, result) {
+     if (err) {
+         res.json({
+             confirmacion: `Elemento ${req.params.id}, NO eliminado`,
+             mensaje: err
+         })
+     }
+     res.json({
+         confirmacion: `Elemento ${req.params.id}, eliminado`,
+         result
+     })
+    })
+});
 
 module.exports = router;
 

@@ -62,6 +62,7 @@ class Clientes extends Component {
                     newArray.push(data);
                     return newArray
                 });
+                console.log(datos);
                 this.setState({ usuarios, tabla: newArray, columnData })
             });
     }
@@ -83,9 +84,10 @@ class Clientes extends Component {
         this.setState({ text })
     }
 
-    formularioEnviado(usuario) {
+    nuevoCliente(usuario) {
+        console.log('RESPUESTA:', usuario);
         let data = {
-            id: usuario.result._id,
+            id: this.state.tabla.length,
             nombre: usuario.result.nombre,
             telf: usuario.result.telf,
             activo: usuario.result.activo,
@@ -97,6 +99,14 @@ class Clientes extends Component {
         this.setState({ editClient: false, newClient: false, viewDetails: false, tabla: newArray });
     }
 
+    editarCliente(cliente) {
+        let { tabla, usuarios, selected } = this.state;
+        tabla[selected] = cliente.result;
+        usuarios[selected] = cliente.result;
+        this.setState({ editClient: false, newClient: false, viewDetails: false, tabla, usuarios });
+
+    }
+
     mostrarDetalles = cliente =>  <Detalles cliente={cliente} />;
 
     render() {
@@ -104,7 +114,7 @@ class Clientes extends Component {
         let cliente = usuarios[selected] || null;
 
         return (
-            <div>HOla
+            <div>
                 {
                     this.state.newClient || this.state.editClient || this.state.viewDetails
                         ? <Button style={{float: 'right'}} raised color="accent" onClick={() => this.setState({ newClient: false, viewDetails: false, editClient: false })} >
@@ -139,7 +149,7 @@ class Clientes extends Component {
                     !this.state.newClient
                     ?   ''
                     :   <Formulario
-                            formularioEnviado={this.formularioEnviado.bind(this)}
+                            nuevoCliente={this.nuevoCliente.bind(this)}
                             // cliente={cliente}
                             action={'ver'}
                         />
@@ -148,7 +158,7 @@ class Clientes extends Component {
                 {
                     this.state.editClient
                     ?   <Formulario
-                            formularioEnviado={this.formularioEnviado.bind(this)}
+                            editarCliente={this.editarCliente.bind(this)}
                             cliente={cliente}
                             action={'editar'}
                         />

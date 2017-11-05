@@ -45,18 +45,18 @@ class Formulario extends React.Component {
     }
 
     componentWillMount() {
-        console.log(this.props.cliente);
+        // console.log(this.props.cliente);
         if (!this.props.cliente) {
             return null
         } else if (this.props.action) {
-            console.log('CLIENTE',this.props.cliente);
+            // console.log('CLIENTE',this.props.cliente);
             this.setState({ ...this.props.cliente })
         }
     }
 
     handleChange(evt, item) {
         if (item === 'nombre' && evt.target.value.length === 3) {
-            console.log(evt.target.value);
+            // console.log(evt.target.value);
             this.setState({ [item]: evt.target.value, buser: 'seo' + evt.target.value + Math.floor(Math.random() * (99 - 10)) + 10 + '@gmail.com',})
         } else {
             this.setState({ [item]: evt.target.value})
@@ -64,8 +64,9 @@ class Formulario extends React.Component {
     }
 
     sendForm() {
+        this.setState({ sendDisabled: true });
         let datos = this.state;
-        let { formularioEnviado, action } = this.props;
+        let { nuevoCliente, editarCliente, action } = this.props;
         fetch('/api/clientes/nuevo', {
             method: action === 'editar' ? 'PUT' : 'POST',
             headers: {
@@ -75,14 +76,16 @@ class Formulario extends React.Component {
         })
             .then(res => res.json())
             .then(result => {
-                formularioEnviado(result)
+                action === 'editar'
+                ? editarCliente(result)
+                : nuevoCliente(result)
             })
     }
 
     render() {
         const { classes, action } = this.props;
-        console.log(this.state);
-        console.log('ACCION',action);
+        // console.log(this.state);
+        // console.log('ACCION',action);
         return (
             <div>
                 <Typography type="display1" gutterBottom>
@@ -204,7 +207,8 @@ class Formulario extends React.Component {
 }
 
 Formulario.PropTypes = {
-    formularioEnviado: PropTypes.func.isRequired,
+    nuevoCliente: PropTypes.func.isRequired,
+    editarCliente: PropTypes.func.isRequired,
 
 };
 

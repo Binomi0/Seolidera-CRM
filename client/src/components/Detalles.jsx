@@ -4,7 +4,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import classnames from 'classnames';
-import Card, { CardHeader, CardMedia, CardContent, CardActions } from 'material-ui/Card';
+import Card, { CardHeader, CardContent, CardActions } from 'material-ui/Card';
 import Collapse from 'material-ui/transitions/Collapse';
 import Avatar from 'material-ui/Avatar';
 import IconButton from 'material-ui/IconButton';
@@ -20,6 +20,11 @@ import Business from 'material-ui-icons/Business';
 import Work from 'material-ui-icons/Work';
 
 const styles = theme => ({
+    container: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
     button: {
         margin: theme.spacing.unit,
         float: 'right'
@@ -28,7 +33,8 @@ const styles = theme => ({
         margin: `0 ${theme.spacing.unit * 2}px`,
     },
     card: {
-        maxWidth: 600,
+        minWidth: 360,
+        maxWidth: 480,
     },
     media: {
         height: 194,
@@ -64,7 +70,7 @@ class RecipeReviewCard extends React.Component {
         const { classes, cliente } = this.props;
 
         return (
-            <div>
+            <div className={classes.container}>
                 <Card className={classes.card}>
                     <CardHeader
                         avatar={
@@ -142,10 +148,10 @@ class RecipeReviewCard extends React.Component {
                         <CardContent>
                             <Typography paragraph type="body2">
                                 ID: {cliente._id} <br/>
-                                Nombre Fiscal: <b>{cliente.fiscal}</b><br/>
-                                Teléfono: <b>{cliente.telf}</b><br/>
-                                Email: <b>{cliente.email}</b><br/>
-                                NIF/CIF: <b>{cliente.dni}</b><br/>
+                                Nombre Fiscal: {cliente.fiscal}<br/>
+                                Teléfono: {cliente.telf}<br/>
+                                Email: {cliente.email}<br/>
+                                NIF/CIF: {cliente.dni}<br/>
                                 <li><strong>Fecha de Alta: </strong>{new Date(cliente.alta).toLocaleDateString('es-ES', options)} </li>
                                 <li><strong>Nombre: </strong>{cliente.nombre} </li>
                                 <li><strong>Apellidos: </strong>{cliente.apellidos} </li>
@@ -233,7 +239,7 @@ class RecipeReviewCard extends React.Component {
                                             Estado: {llamada.estado}
                                         </Typography>
                                         <Typography gutterBottom noWrap>
-                                            Detalles: {llamada.descripción}
+                                            Detalles: {llamada.descripcion}
                                         </Typography>
                                     </CardContent>
                                     )
@@ -278,7 +284,7 @@ class RecipeReviewCard extends React.Component {
                                                 Estado: {tarea.estado}
                                             </Typography>
                                             <Typography type="body2" gutterBottom noWrap>
-                                                Detalles: {tarea.descripción}
+                                                Detalles: {tarea.descripcion}
                                             </Typography>
                                         </CardContent>
                                     })

@@ -48,7 +48,7 @@ class EnhancedTableHead extends React.Component {
 
     render() {
         const { order, orderBy, columnData } = this.props;
-        console.log(columnData);
+        // console.log(columnData);
 
         return (
             <TableHead>
@@ -260,7 +260,7 @@ class EnhancedTable extends React.Component {
 
     componentWillMount() {
         let { data, columnData } = this.props;
-        console.log('Montando tabla con: ', data);
+        // console.log('Montando tabla con: ', data);
         let newArray = [];
         for (let i = 0; i < data.length; i++) {
             // console.log(typeof data[0][i][columnData[2]['id']], data[0][i][columnData[2]['id']]);

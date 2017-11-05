@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'
 import AppBar from './material/AppBar';
-import TopMenu from './material/TopMenu';
+// import TopMenu from './material/TopMenu';
 
 
 class Header extends Component {
@@ -10,7 +10,7 @@ class Header extends Component {
     // }
 
     render() {
-        let { title, subtitle, user, route } = this.props;
+        let { title, subtitle, user } = this.props;
         return (
             <div>
                 <AppBar title={`SeoLidera CRM | ${title}`} user={user} logout={() => this.props.logout()} />

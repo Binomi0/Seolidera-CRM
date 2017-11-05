@@ -26,7 +26,15 @@ module.exports = {
         console.log('Cliente ID:', id);
         console.log('resource:', resource);
         console.log('body:', body);
-        Clientes.findOneAndUpdate({ '_id': id } , { $push: { [resource]: body }}, { new: true }, function (err, response) {
+        if (resource !== 'clientes') {
+            Clientes.findOneAndUpdate({ '_id': id } , { $push: { [resource]: body }}, { new: true }, function (err, response) {
+                if (err) {
+                    return callback(err,  null);
+                }
+                return callback(null, response)
+            })
+        }
+        Clientes.findOneAndUpdate({ '_id': id } , body , { new: true }, function (err, response) {
             if (err) {
                 return callback(err,  null);
             }
@@ -42,5 +50,15 @@ module.exports = {
                 return callback(null,  result)
             }).populate(resource)
         }
+    },
+    delete: function (id, callback) {
+        let ok = false;
+        Clientes.findByIdAndRemove({ '_id': id}).then(() => {
+            ok = true;
+            return callback(null, ok)
+        }).catch(err => {
+            ok = false;
+            return callback(err, ok)
+        });
     }
 };

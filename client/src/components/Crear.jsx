@@ -12,7 +12,7 @@ const styles = theme => ({
 });
 
 function FloatingActionButtons(props) {
-    const { classes, addClient, route } = props;
+    const { classes, addClient } = props;
     // function addAction(e) {
     //     activateAction(e)
     // }
