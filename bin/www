@@ -3,9 +3,14 @@
 /**
  * Module dependencies.
  */
-
 var app = require('../app');
 var debug = require('debug')('backend:server');
+// var fs = require('fs');
+// var key = fs.readFileSync('encryption/private.key');
+// var cert = fs.readFileSync( 'encryption/primary.crt' );
+// var ca = fs.readFileSync( 'encryption/intermediate.crt' );
+// var options = { key: key, cert: cert, ca: cacheName };
+// var http = require('http');
 var http = require('http');
 
 /**

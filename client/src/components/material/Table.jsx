@@ -95,7 +95,7 @@ const toolbarStyles = theme => ({
     },
     formControl: {
         margin: theme.spacing.unit,
-        minWidth: 120,
+        minWidth: 200,
     },
     root: {
         paddingRight: 2,
@@ -172,7 +172,7 @@ let EnhancedTableToolbar = props => {
                     <div style={{display: 'flex'}}>
                         {
                             search ? <div style={{display: 'flex'}}>
-                                <form className={classes.container} autoComplete="off">
+                                {/*<form className={classes.container} autoComplete="off">*/}
                                     <FormControl className={classes.formControl}>
                                         <InputLabel htmlFor="columns">Filtrar por</InputLabel>
                                         <Select
@@ -196,10 +196,10 @@ let EnhancedTableToolbar = props => {
                                         className={classes.textField}
                                         value={text}
                                         onChange={(e) => handleTextChange(e)}
-                                        helperText={`Se filtrarán los resultados por ${select.toUpperCase()}`}
+                                        // helperText={`Se filtrarán los resultados por ${select.toUpperCase()}`}
                                         // margin="normal"
                                     />
-                                </form>
+                                {/*</form>*/}
                                 <Tooltip title="Ocultar">
                                     <IconButton aria-label="Ocultar" onClick={() => showSearch()}>
                                         <YoutubeSearched />
@@ -267,12 +267,12 @@ class EnhancedTable extends React.Component {
         for (let i = 0; i < data.length; i++) {
             // console.log(typeof data[0][i][columnData[2]['id']], data[0][i][columnData[2]['id']]);
             let datos = {
-                id: data[0][i]['id'],
-                [columnData[0]['id']]: data[0][i][columnData[0]['id']],
-                [columnData[1]['id']]: data[0][i][columnData[1]['id']],
-                [columnData[2]['id']]: data[0][i][columnData[2]['id']],
-                [columnData[3]['id']]: typeof data[0][i][columnData[3]['id']] === 'string' ? data[0][i][columnData[3]['id']] : typeof data[0][i][columnData[3]['id']] === 'object' ? data[0][i][columnData[3]['id']].length : '',
-                [columnData[4]['id']]: typeof data[0][i][columnData[4]['id']] === 'string' ? data[0][i][columnData[4]['id']] : typeof data[0][i][columnData[4]['id']] === 'object' ? data[0][i][columnData[4]['id']].length : ''
+                id: data[i]['id'],
+                [columnData[0]['id']]: data[i][columnData[0]['id']],
+                [columnData[1]['id']]: data[i][columnData[1]['id']],
+                [columnData[2]['id']]: data[i][columnData[2]['id']],
+                [columnData[3]['id']]: typeof data[i][columnData[3]['id']] === 'string' ? data[i][columnData[3]['id']] : typeof data[i][columnData[3]['id']] === 'object' ? data[i][columnData[3]['id']].length : '',
+                [columnData[4]['id']]: typeof data[i][columnData[4]['id']] === 'string' ? data[i][columnData[4]['id']] : typeof data[i][columnData[4]['id']] === 'object' ? data[i][columnData[4]['id']].length : ''
             };
             newArray.push(datos);
         }

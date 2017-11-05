@@ -7,7 +7,7 @@ const Pedido = require('./pedidosSchema');
 const Tarea = require('./tareasSchema');
 
 const ClientesSchema = new mongoose.Schema({
-    nombre: { type: String },
+    nombre: { type: String, required: true },
     apellidos: { type: String },
     fiscal: { type: String },
     telf: { type: String },

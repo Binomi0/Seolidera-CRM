@@ -2,7 +2,7 @@ extends layout
 
 block content
 	h1 Crear nuevo Cliente
-	form(action="/clientes/nuevo" method="post")
+	form(action="/api/clientes/nuevo" method="post")
 		input(type="text" onchange="userfunc()" name="nombre" id="nombre" placeholder="Nombre" required class="form-input")
 		input(type="text" name="apellidos" id="apellidos" placeholder="Apellidos" required class="form-input")
 		br

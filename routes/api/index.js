@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const controllers = require('../controladores');
+const controllers = require('../../controladores/index');
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -80,9 +80,10 @@ router.post('/:resource/?:action', function (req, res) {
     let action = req.params.action;
     let controller = controllers[resource];
     let id = req.body.cliente || req.body.negocio || req.body.tareas || req.body.llamada;
-    // console.log('Resource:', resource);
-    // console.log('Action:', action);
-    // console.log('id:', id);
+    console.log('Request:', req.body);
+    console.log('Resource:', resource);
+    console.log('Action:', action);
+    console.log('id:', id);
 
     if (controller === null ){
         res.json({
@@ -104,6 +105,7 @@ router.post('/:resource/?:action', function (req, res) {
             break;
         case 'nuevo':
             // console.log(`Accion: ${action}`);
+            console.log('BODY:',req.body);
             controller.create(req.body, function(err, result) {
                 // console.log('Resultado de crear', resource, result);
                 if (err) {

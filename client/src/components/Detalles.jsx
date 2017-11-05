@@ -68,9 +68,11 @@ class RecipeReviewCard extends React.Component {
                 <Card className={classes.card}>
                     <CardHeader
                         avatar={
-                            <Avatar aria-label="Recipe" className={classes.avatar}>
-                                R
-                            </Avatar>
+                            <Tooltip title="Estado" placement="bottom" enterDelay={300}>
+                                <Avatar aria-label="Recipe" className={classes.avatar}>
+                                    R
+                                </Avatar>
+                            </Tooltip>
                         }
                         title={`${cliente.nombre} ${cliente.apellidos} `}
                         subheader={`Alta: ` + new Date(cliente.alta).toLocaleDateString('es-ES', options)}
@@ -79,7 +81,7 @@ class RecipeReviewCard extends React.Component {
 
                     </CardContent>
                     <CardActions disableActionSpacing>
-                        <Tooltip title="Ver Negocios" placement="left" enterDelay={300}>
+                        <Tooltip title="Ver Negocios" placement="top-start" enterDelay={300}>
                             <IconButton
                                 aria-label="Negocios"
                                 className={classnames(classes.expand, {
@@ -93,51 +95,58 @@ class RecipeReviewCard extends React.Component {
                                 </Badge>
                             </IconButton>
                         </Tooltip>
-                        <IconButton
-                            className={classnames(classes.expand, {
-                                [classes.expandOpen]: this.state.callsExpanded,
-                            })}
-                            onClick={() => this.handleExpandClick('callsExpanded')}
-                            aria-expanded={this.state.callsExpanded}
-                            aria-label="Llamadas"
+                        <Tooltip title="Ver Llamadas" placement="top" enterDelay={300}>
+                            <IconButton
+                                className={classnames(classes.expand, {
+                                    [classes.expandOpen]: this.state.callsExpanded,
+                                })}
+                                onClick={() => this.handleExpandClick('callsExpanded')}
+                                aria-expanded={this.state.callsExpanded}
+                                aria-label="Llamadas"
 
-                        >
-                            <Badge className={classes.badge} badgeContent={cliente.llamadas.length} color={cliente.llamadas.length < 1 ? badgeColor[0] : badgeColor[1]} >
-                                <Phone />
-                            </Badge>
-                        </IconButton>
-                        <IconButton
-                            aria-label="Tareas"
-                            className={classnames(classes.expand, {
-                                [classes.expandOpen]: this.state.tareasExpanded,
-                            })}
-                            onClick={() => this.handleExpandClick('tareasExpanded')}
-                            aria-expanded={this.state.tareasExpanded}
-                        >
-                            <Badge className={classes.badge} badgeContent={cliente.tareas.length} color={cliente.tareas.length < 1 ? badgeColor[0] : badgeColor[1]} >
-                                <Work />
-                            </Badge>
-                        </IconButton>
+                            >
+                                <Badge className={classes.badge} badgeContent={cliente.llamadas.length} color={cliente.llamadas.length < 1 ? badgeColor[0] : badgeColor[1]} >
+                                    <Phone />
+                                </Badge>
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Ver Tareas" placement="top-end" enterDelay={300}>
+                            <IconButton
+                                aria-label="Tareas"
+                                className={classnames(classes.expand, {
+                                    [classes.expandOpen]: this.state.tareasExpanded,
+                                })}
+                                onClick={() => this.handleExpandClick('tareasExpanded')}
+                                aria-expanded={this.state.tareasExpanded}
+                            >
+                                <Badge className={classes.badge} badgeContent={cliente.tareas.length} color={cliente.tareas.length < 1 ? badgeColor[0] : badgeColor[1]} >
+                                    <Work />
+                                </Badge>
+                            </IconButton>
+                        </Tooltip>
                         <div className={classes.flexGrow} />
-                        <IconButton
-                            className={classnames(classes.expand, {
-                                [classes.expandOpen]: this.state.expanded,
-                            })}
-                            onClick={() => this.handleExpandClick('expanded')}
-                            aria-expanded={this.state.expanded}
-                            aria-label="Show more"
-                        >
-                            <ExpandMoreIcon />
-                        </IconButton>
+                        <Tooltip title="Ver Detalles" placement="top" enterDelay={300}>
+                            <IconButton
+                                className={classnames(classes.expand, {
+                                    [classes.expandOpen]: this.state.expanded,
+                                })}
+                                onClick={() => this.handleExpandClick('expanded')}
+                                aria-expanded={this.state.expanded}
+                                aria-label="Show more"
+                            >
+                                <ExpandMoreIcon />
+                            </IconButton>
+                        </Tooltip>
                     </CardActions>
                     <Collapse in={this.state.expanded} transitionDuration="auto" unmountOnExit>
                         <CardContent>
                             <Typography paragraph type="body2">
+                                ID: {cliente._id} <br/>
                                 Nombre Fiscal: <b>{cliente.fiscal}</b><br/>
                                 Teléfono: <b>{cliente.telf}</b><br/>
                                 Email: <b>{cliente.email}</b><br/>
                                 NIF/CIF: <b>{cliente.dni}</b><br/>
-                                <li><strong>Fecha de Alta: </strong>{cliente.alta} </li>
+                                <li><strong>Fecha de Alta: </strong>{new Date(cliente.alta).toLocaleDateString('es-ES', options)} </li>
                                 <li><strong>Nombre: </strong>{cliente.nombre} </li>
                                 <li><strong>Apellidos: </strong>{cliente.apellidos} </li>
                                 <li><strong>Nombre Fiscal: </strong>{cliente.fiscal} </li>
@@ -160,16 +169,16 @@ class RecipeReviewCard extends React.Component {
                                 Lista de Negocios
                             </Typography>
                             <Tooltip title="Nuevo Negocio" placement="left" enterDelay={300}>
-                            <Button
-                                href={`/crearNegocio`}
-                                // onClick={(e) => addAction(true)}
-                                fab={true}
-                                color="primary"
-                                aria-label="nuevo negocio"
-                                className={classes.button}
-                            >
-                                <AddIcon />
-                            </Button>
+                                <Button
+                                    href={`/api/crearNegocio`}
+                                    // onClick={(e) => addAction(true)}
+                                    fab={true}
+                                    color="primary"
+                                    aria-label="nuevo negocio"
+                                    className={classes.button}
+                                >
+                                    <AddIcon />
+                                </Button>
                             </Tooltip>
                                 {
                                     cliente.negocios.length > 0
@@ -199,16 +208,18 @@ class RecipeReviewCard extends React.Component {
                             <Typography type="headline" component="h2">
                                 Lista de Llamadas
                             </Typography>
-                            <Button
-                                href={`/crearLlamada`}
-                                // onClick={(e) => addAction(true)}
-                                fab={true}
-                                color="primary"
-                                aria-label="nueva llamada"
-                                className={classes.button}
-                            >
-                                <AddIcon />
-                            </Button>
+                            <Tooltip title="Nueva Llamada" placement="left" enterDelay={300}>
+                                <Button
+                                    href={`/api/crearLlamada`}
+                                    // onClick={(e) => addAction(true)}
+                                    fab={true}
+                                    color="primary"
+                                    aria-label="nueva llamada"
+                                    className={classes.button}
+                                >
+                                    <AddIcon />
+                                </Button>
+                            </Tooltip>
                             {
                                 cliente.llamadas.length > 0
                                     ? cliente.llamadas.map((llamada, index) => {
@@ -236,17 +247,19 @@ class RecipeReviewCard extends React.Component {
                             <Typography type="headline" component="h2">
                                 Lista de Tareas
                             </Typography>
-                            <Button
-                                href={`/crearTarea`}
-                                // onClick={(e) => addAction(true)}
-                                fab={true}
-                                color="primary"
-                                aria-label="nueva tarea"
-                                className={classes.button}
-                                dense={true}
-                            >
-                                <AddIcon />
-                            </Button>
+                            <Tooltip title="Nueva Tarea" placement="left" enterDelay={300}>
+                                <Button
+                                    href={`/api/crearTarea`}
+                                    // onClick={(e) => addAction(true)}
+                                    fab={true}
+                                    color="primary"
+                                    aria-label="nueva tarea"
+                                    className={classes.button}
+                                    dense={true}
+                                >
+                                    <AddIcon />
+                                </Button>
+                            </Tooltip>
                                 {
                                     cliente.tareas.length > 0
                                         ? cliente.tareas.map((tarea, index) => {

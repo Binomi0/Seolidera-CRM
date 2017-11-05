@@ -12,14 +12,14 @@ const styles = theme => ({
 });
 
 function FloatingActionButtons(props) {
-    const { classes, activateAction, route } = props;
+    const { classes, addClient, route } = props;
     // function addAction(e) {
     //     activateAction(e)
     // }
     return (
         <Button
-            href={`http://asus.onrubia.es:3001/crear${route}`}
-            // onClick={(e) => addAction(true)}
+            // href={`/api/crear${route}`}
+            onClick={(e) => addClient(true)}
             fab={true}
             color="accent"
             aria-label="add"

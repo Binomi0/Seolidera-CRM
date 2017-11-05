@@ -9,6 +9,7 @@ import './App.css';
 import Login from './routes/Login';
 import Header from './components/Header'
 import Clientes from "./routes/Clientes";
+import 'typeface-roboto';
 
 class App extends Component {
     state = {
@@ -29,14 +30,14 @@ class App extends Component {
     loggedIn = () => <Clientes />;
 
     logout = () => {
-        sessionStorage.removeItem('user')
+        sessionStorage.removeItem('user');
         this.setState({ user: null })
     };
 
     notLogged = () => <Login autenticacionUsuario={this.autenticacionUsuario.bind(this)} />;
 
     changeRoute = (route) => {
-        console.log('RUTA', route);
+        // console.log('RUTA', route);
         this.setState({ route })
     };
 
