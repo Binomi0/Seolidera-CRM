@@ -92,23 +92,24 @@ class Clientes extends Component {
         }
     }
 
-    changeText(text) {
+    filterText(text) {
         this.setState({ text })
     }
 
     nuevoCliente(usuario) {
-        // console.log('RESPUESTA:', usuario);
-        let data = {
-            id: this.state.tabla.length,
-            nombre: usuario.result.nombre,
-            telf: usuario.result.telf,
-            activo: usuario.result.activo,
-            negocios: usuario.result.negocios,
-            tareas: usuario.result.tareas
-        };
-        let newArray = this.state.tabla;
-        newArray.push(data);
-        this.setState({ newCall: false, editClient: false, newClient: false, viewClient: false, tabla: newArray, nuevoNegocio: false });
+        console.log(usuario);
+        // // console.log('RESPUESTA:', usuario);
+        // let data = {
+        //     id: this.state.tabla.length,
+        //     nombre: usuario.result.nombre,
+        //     telf: usuario.result.telf,
+        //     activo: usuario.result.activo,
+        //     negocios: usuario.result.negocios,
+        //     tareas: usuario.result.tareas
+        // };
+        // let newArray = this.state.tabla;
+        // newArray.push(data);
+        this.setState({ newClient: false });
         this.loadResources()
     }
 
@@ -191,7 +192,7 @@ class Clientes extends Component {
                                         columnData={columnData}
                                         title="Cliente"
                                         itemSelected={this.itemSelected.bind(this)}
-                                        changeText={this.changeText.bind(this)}
+                                        changeText={this.filterText.bind(this)}
                                 />
                             }
                     </div>
@@ -204,7 +205,7 @@ class Clientes extends Component {
                     :   <FullScreenDialog
                             nuevoCliente={this.nuevoCliente.bind(this)}
                             type="Cliente"
-                            cliente={cliente || {} }
+                            cliente={ {} }
                             user={user}
                             action='nuevo'
                             closed={this.toggleClientes.bind(this)}

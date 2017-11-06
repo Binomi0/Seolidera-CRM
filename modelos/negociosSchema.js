@@ -20,12 +20,14 @@ const NegociosSchema = new mongoose.Schema({
     fecha_pago: { type: Date },
     horario: [{ type: String }],
     oportunidades: { type: String },
+    descripcion: { type: String },
     producto: { type: String },
     redes: [{ type: String}],
     fotos: [{ type: mongoose.Schema.Types.Mixed }],
     frases: [{ type: String }],
     activa: { type: Boolean },
-    estado: { type: String }
+    estado: { type: String },
+    agente: { typre: String },
 });
 
 NegociosSchema.pre('save', function (next) {

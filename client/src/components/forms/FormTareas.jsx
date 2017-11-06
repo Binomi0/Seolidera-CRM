@@ -18,8 +18,8 @@ import Select from 'material-ui/Select';
 
 const styles = theme => ({
     formControl: {
-        margin: theme.spacing.unit,
-        minWidth: 120,
+        // margin: theme.spacing.unit,
+        minWidth: 200,
     },
     root: theme.mixins.gutters({
         paddingTop: 16,
@@ -52,6 +52,7 @@ class FormTareas extends React.Component {
             agente: '',
             estado: '',
             descripcion: '',
+            responsable: '',
             sendDisabled: false,
             dialogOpen: false
         }
@@ -88,7 +89,6 @@ class FormTareas extends React.Component {
         let { action, user } = this.props;
         let datos = this.state;
         datos['cliente'] = this.props.cliente._id;
-        datos['agente'] = user;
         fetch('/api/tareas/nuevo', {
             method: action === 'editar' ? 'PUT' : 'POST',
             headers: {
@@ -178,6 +178,15 @@ class FormTareas extends React.Component {
                                 <MenuItem value={2}>Completada</MenuItem>
                             </Select>
                         </FormControl>
+                        <TextField
+                            id="responsable"
+                            label="responsable"
+                            multiline={true}
+                            className={classes.textField}
+                            value={this.state.responsable}
+                            onChange={(e) => this.handleChange(e, 'responsable')}
+                            margin="normal"
+                        />
                         <TextField
                             id="descripcion"
                             label="descripcion"

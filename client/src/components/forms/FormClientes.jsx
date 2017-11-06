@@ -118,8 +118,8 @@ class Formulario extends React.Component {
             <div>
 
                 <Dialog open={this.state.dialogOpen} onRequestClose={this.handleRequestClose.bind(this, false)}>
-                    <DialogTitle>{"Use Google's location service?"}</DialogTitle>
-                    <DialogContent>
+                    <DialogTitle>{"Confirmación de seguridad"}</DialogTitle>
+s                    <DialogContent>
                         <DialogContentText>
                             Estas a punto de modificar la base de datos, confirma por favor.
                         </DialogContentText>

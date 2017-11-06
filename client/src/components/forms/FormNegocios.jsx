@@ -11,11 +11,13 @@ import Dialog, {
     DialogTitle,
 } from 'material-ui/Dialog';
 import Paper from 'material-ui/Paper';
-import Input from 'material-ui/Input';
 import Checkbox from 'material-ui/Checkbox';
 import green from 'material-ui/colors/green';
 import { FormControlLabel } from 'material-ui/Form';
-
+import Input, { InputLabel } from 'material-ui/Input';
+import { MenuItem } from 'material-ui/Menu';
+import { FormControl } from 'material-ui/Form';
+import Select from 'material-ui/Select';
 
 
 const styles = theme => ({
@@ -66,12 +68,15 @@ class FormNegocios extends React.Component {
             pagado: '',
             horario: '',
             oportunidades: '',
+            descripcion: '',
             redes: '',
             fotos: [],
             frases: '',
             activa: false,
             estado: '',
             pagada: false,
+            producto: '',
+            renovacion: '',
             agente: props.user,
             dialogOpen: false,
         }
@@ -112,11 +117,10 @@ class FormNegocios extends React.Component {
     }
 
     sendForm() {
-        console.log(this.props);
         let { action, cliente, user } = this.props;
         let datos = this.state;
         datos['cliente'] = cliente._id;
-        datos['agente'] = user;
+        datos['agente'] = user || this.state.agente;
         fetch('/api/negocios/nuevo', {
             method: action === 'editar' ? 'PUT' : 'POST',
             headers: {
@@ -171,7 +175,7 @@ class FormNegocios extends React.Component {
                         />
                         <TextField
                             id="pais"
-                            label="Pais"
+                            label="País"
                             className={classes.textField}
                             value={this.state.pais}
                             onChange={(e) => this.handleChange(e, 'pais')}
@@ -304,13 +308,26 @@ class FormNegocios extends React.Component {
                             margin="normal"
                         />
                         <TextField
-                            id="oportunidades"
-                            label="Oportunidades"
+                            id="descripcion"
+                            label="Descripcion"
                             className={classes.textField}
-                            value={this.state.oportunidades}
-                            onChange={(e) => this.handleChange(e, 'oportunidades')}
+                            value={this.state.descripcion}
+                            onChange={(e) => this.handleChange(e, 'descripcion')}
                             margin="normal"
                         />
+                        <FormControl className={classes.formControl}>
+                            <InputLabel htmlFor="renovacion">Renovación</InputLabel>
+                            <Select
+                                value={this.state.renovacion}
+                                onChange={(e) => this.handleChange(e, 'renovacion')}
+                                input={<Input id="renovacion" />}
+                            >
+                                <MenuItem value={1}>Mensual</MenuItem>
+                                <MenuItem value={3}>Trimestral</MenuItem>
+                                <MenuItem value={6}>Semestral</MenuItem>
+                                <MenuItem value={12}>Anual</MenuItem>
+                            </Select>
+                        </FormControl>
                     </Paper>
                 </form>
                 <Button raised color="primary" className={classes.button} onClick={this.confirmForm.bind(this)} disabled={this.state.sendDisabled}>

@@ -195,7 +195,7 @@ class RecipeReviewCard extends React.Component {
                                         return (
                                             <CardContent key={index}>
                                                 <Typography type="title" gutterBottom>
-                                                    {negocio.asunto}
+                                                    {negocio.nombre}
                                                 </Typography>
                                                 <Typography gutterBottom noWrap>
                                                     Agente: {negocio.agente}
@@ -207,7 +207,7 @@ class RecipeReviewCard extends React.Component {
                                                     Producto: {negocio.producto}
                                                 </Typography>
                                                 <Typography gutterBottom noWrap>
-                                                    Renovación: {negocio.renovar}
+                                                    Renovación: {new Date(negocio.renovar).toLocaleDateString('es-ES', options)}
                                                     </Typography>
                                                 <Typography gutterBottom noWrap>
                                                     Recurrencia: {recurrencia[negocio.renovacion]}
@@ -279,29 +279,29 @@ class RecipeReviewCard extends React.Component {
                                     <AddIcon />
                                 </Button>
                             </Tooltip>
-                                {
-                                    cliente.tareas.length > 0
-                                        ? cliente.tareas.map((tarea, index) => {
-                                        return <CardContent key={index}>
-                                            <Typography type="title" gutterBottom>
-                                                Título: {tarea.título}
-                                            </Typography>
-                                            <Typography type="caption" gutterBottom align="center">
-                                                {new Date(tarea.fecha_inicio).toLocaleDateString('es-ES', options)}
-                                            </Typography>
-                                            <Typography type="body2" gutterBottom>
-                                                Agente: {tarea.agente}
-                                            </Typography>
-                                            <Typography type="body2" gutterBottom>
-                                                Estado: {estados[tarea.estado]}
-                                            </Typography>
-                                            <Typography type="body2" gutterBottom noWrap>
-                                                Detalles: {tarea.descripcion}
-                                            </Typography>
-                                        </CardContent>
-                                    })
-                                        : ''
-                                }
+                            {
+                                cliente.tareas.length > 0
+                                    ? cliente.tareas.map((tarea, index) => {
+                                    return <CardContent key={index}>
+                                        <Typography type="title" gutterBottom>
+                                            {tarea.titulo}
+                                        </Typography>
+                                        <Typography type="caption" gutterBottom align="center">
+                                            {new Date(tarea.fecha_inicio).toLocaleDateString('es-ES', options)}
+                                        </Typography>
+                                        <Typography type="body2" gutterBottom>
+                                            Agente: {tarea.agente}
+                                        </Typography>
+                                        <Typography type="body2" gutterBottom>
+                                            Estado: {estados[tarea.estado]}
+                                        </Typography>
+                                        <Typography type="body2" gutterBottom noWrap>
+                                            Detalles: {tarea.descripcion}
+                                        </Typography>
+                                    </CardContent>
+                                })
+                                    : ''
+                            }
                         </CardContent>
                     </Collapse>
                 </Card>

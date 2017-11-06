@@ -21,7 +21,7 @@ module.exports = {
         })
     },
     update: function (id, body, callback) {
-        Negocios.findOneAndUpdate(id, body, {new: true}, function (err, response) {
+        Negocios.findOneAndUpdate({ '_id': id }, body, {new: true}, function (err, response) {
             if (err) {
                 return callback(err,  null);
             }

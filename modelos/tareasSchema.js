@@ -9,6 +9,7 @@ const TareasSchema = new mongoose.Schema({
     fecha_inicio: { type: Date, default: Date.now()},
     fecha_fin: { type: Date, default: Date.now()},
     agente: { type: String },
+    responsable: { type: String },
     estado: {type: String },
     descripcion: { type: String }
 });

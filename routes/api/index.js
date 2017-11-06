@@ -168,18 +168,14 @@ router.post('/:resource/?:action', function (req, res) {
         default:
             break;
     }
-
-    if (resource === 'negocios') {
-
-    }
-
 });
 
-router.put('/:resource/:action?', function (req, res) {
+router.put('/:resource/:id?', function (req, res) {
      let resource = req.params.resource;
+     let id = req.params.id || req.body._id;
      // let action = req.params.action;
-     console.log('ID:',req.body._id);
-     controllers[resource].update(req.body._id, resource, req.body, function (err, result) {
+     console.log('ID:',id);
+     controllers[resource].update(id, req.body, function (err, result) {
          if (err) throw err;
          res.json({ result })
      })
