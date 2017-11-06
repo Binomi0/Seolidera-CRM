@@ -27,5 +27,15 @@ module.exports = {
             }
             return callback(null, response)
         })
+    },
+    delete: function (id, callback) {
+        let ok = false;
+        Negocios.findByIdAndRemove({ '_id': id}).then(() => {
+            ok = true;
+            return callback(null, ok)
+        }).catch(err => {
+            ok = false;
+            return callback(err, ok)
+        });
     }
 };

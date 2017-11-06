@@ -20,5 +20,23 @@ module.exports = {
             }
             return callback(null, tareas)
         })
+    },
+    update: function (id, body, callback) {
+        Tareas.findOneAndUpdate({ '_id': id },  body, { new: true }, function (err, llamada) {
+            if (err) {
+                return callback(err, null)
+            }
+            return callback(null, llamada)
+        })
+    },
+    delete: function (id, callback) {
+        let ok = false;
+        Tareas.findByIdAndRemove({ '_id': id}).then(() => {
+            ok = true;
+            return callback(null, ok)
+        }).catch(err => {
+            ok = false;
+            return callback(err, ok)
+        });
     }
 };

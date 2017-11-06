@@ -11,6 +11,10 @@ import Dialog, {
     DialogTitle,
 } from 'material-ui/Dialog';
 import Paper from 'material-ui/Paper';
+import Input, { InputLabel } from 'material-ui/Input';
+import { MenuItem } from 'material-ui/Menu';
+import { FormControl } from 'material-ui/Form';
+import Select from 'material-ui/Select';
 
 const styles = theme => ({
     formControl: {
@@ -38,39 +42,32 @@ const styles = theme => ({
     },
 });
 
-class FormLlamadas extends React.Component {
+class FormTareas extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            producto: '',
-            tlf: '',
+            titulo: '',
+            fecha_inicio: '',
+            fecha_fin: '',
             agente: '',
-            objetivo: '',
-            asunto: '',
-            fecha: '',
-            descripcion: '',
-            tipo: '',
-            cuenta: '',
             estado: '',
+            descripcion: '',
             sendDisabled: false,
             dialogOpen: false
         }
     }
 
     componentWillMount() {
-        if (!this.props.cliente.llamadas) {
+        if (!this.props.cliente.tareas) {
             return null
         } else if (this.props.action) {
-            this.setState({ ...this.props.cliente.llamadas })
+            this.setState({ ...this.props.cliente.tareas })
         }
     }
 
     handleChange(evt, item) {
-        if (item === 'nombre' && evt.target.value.length === 3) {
-            this.setState({ [item]: evt.target.value, buser: 'seo' + evt.target.value + Math.floor(Math.random() * (99 - 10)) + 10 + '@gmail.com',})
-        } else {
-            this.setState({ [item]: evt.target.value})
-        }
+        console.log(item);
+        this.setState({ [item]: evt.target.value})
     }
 
     confirmForm() {
@@ -88,10 +85,11 @@ class FormLlamadas extends React.Component {
 
     sendForm() {
         console.log(this.props);
-        let { action } = this.props;
+        let { action, user } = this.props;
         let datos = this.state;
         datos['cliente'] = this.props.cliente._id;
-        fetch('/api/llamadas/nuevo', {
+        datos['agente'] = user;
+        fetch('/api/tareas/nuevo', {
             method: action === 'editar' ? 'PUT' : 'POST',
             headers: {
                 'Content-Type': 'application/json; charset=UTF-8',
@@ -101,20 +99,19 @@ class FormLlamadas extends React.Component {
             .then(res => res.json())
             .then(result => {
                 action === 'editar'
-                ? this.props.editarLlamada(result)
-                : this.props.nuevaLlamada(result)
+                ? this.props.editarTarea(result)
+                : this.props.nuevaTarea(result)
             })
     }
 
     render() {
         const { classes, action } = this.props;
+        // let hoy = new Date.now();
+        // hoy = hoy.toLocaleDateString();
         // console.log(this.state);
         // console.log('ACCION',action);
         return (
             <Paper className={classes.root} elevation={4}>
-                <Typography type="display1" gutterBottom>
-                    { action === 'editar' ? 'Editando Llamada' : 'Añadir nueva llamada'}
-                </Typography>
                 <Dialog open={this.state.dialogOpen} onRequestClose={this.handleRequestClose.bind(this, false)}>
                     <DialogTitle>{"Confirmación de seguridad"}</DialogTitle>
                     <DialogContent>
@@ -134,96 +131,78 @@ class FormLlamadas extends React.Component {
                 <form className={classes.container} noValidate autoComplete="off">
                     <Paper className={classes.root} elevation={4}>
                         <Typography type="title" gutterBottom>
-                            Detalles de la llamada
+                            Detalles de la Tarea
                         </Typography>
                         <TextField
-                            id="producto"
-                            label="Producto"
+                            id="titulo"
+                            label="Titulo"
                             className={classes.textField}
-                            value={this.state.producto}
-                            onChange={(e) => this.handleChange(e, 'producto')}
+                            value={this.state.titulo}
+                            onChange={(e) => this.handleChange(e, 'titulo')}
                             margin="normal"
                             autoFocus={true}
                         />
                         <TextField
-                            id="tlf"
-                            label="Teléfono"
+                            id="fecha_inicio"
+                            label="Fecha de Inicio"
+                            type="date"
                             className={classes.textField}
-                            value={this.state.tlf}
-                            onChange={(e) => this.handleChange(e, 'tlf')}
-                            margin="normal"
+                            value={this.state.fecha_inicio}
+                            onChange={(e) => this.handleChange(e, 'fecha_inicio')}
+                            // margin="normal"
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
                         />
                         <TextField
-                            id="agente"
-                            label="Agente"
+                            id="fecha_fin"
+                            label="Fecha de Fin"
+                            type="date"
                             className={classes.textField}
-                            value={this.state.agente}
-                            onChange={(e) => this.handleChange(e, 'agente')}
+                            value={this.state.fecha_fin || ''}
+                            onChange={(e) => this.handleChange(e, 'fecha_fin')}
                             margin="normal"
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
                         />
-                        <TextField
-                            id="objetivo"
-                            label="Objetivo"
-                            className={classes.textField}
-                            value={this.state.objetivo}
-                            onChange={(e) => this.handleChange(e, 'objetivo')}
-                            margin="normal"
-                        />
-                        <TextField
-                            id="asunto"
-                            label="Asunto"
-                            className={classes.textField}
-                            value={this.state.asunto}
-                            onChange={(e) => this.handleChange(e, 'asunto')}
-                            margin="normal"
-                        />
+                        <FormControl className={classes.formControl}>
+                            <InputLabel htmlFor="estado">Estado</InputLabel>
+                            <Select
+                                value={this.state.estado}
+                                onChange={(e) => this.handleChange(e, 'estado')}
+                                input={<Input id="estado" />}
+                            >
+                                <MenuItem value={0}>Pendiente</MenuItem>
+                                <MenuItem value={1}>En tránsito</MenuItem>
+                                <MenuItem value={2}>Completada</MenuItem>
+                            </Select>
+                        </FormControl>
                         <TextField
                             id="descripcion"
-                            label="Descripcion"
+                            label="descripcion"
+                            multiline={true}
                             className={classes.textField}
                             value={this.state.descripcion}
                             onChange={(e) => this.handleChange(e, 'descripcion')}
                             margin="normal"
                         />
-                        <TextField
-                            id="tipo"
-                            label="Tipo"
-                            className={classes.textField}
-                            value={this.state.tipo}
-                            onChange={(e) => this.handleChange(e, 'tipo')}
-                            margin="normal"
-                        />
-                        <TextField
-                            id="cuenta"
-                            label="Cuenta"
-                            className={classes.textField}
-                            value={this.state.cuenta}
-                            onChange={(e) => this.handleChange(e, 'cuenta')}
-                            margin="normal"
-                        />
-                        <TextField
-                            id="estado"
-                            label="Estado"
-                            className={classes.textField}
-                            value={this.state.estado}
-                            onChange={(e) => this.handleChange(e, 'estado')}
-                            margin="normal"
-                        />
                     </Paper>
                 </form>
                 <Button raised color="primary" className={classes.button} onClick={this.confirmForm.bind(this)} disabled={this.state.sendDisabled}>
-                    { action === 'editar' ? 'Editar Llamada' : 'Añadir nueva llamada'}
+                    { action === 'editar' ? 'Editar Tarea' : 'Añadir nueva tarea'}
                 </Button>
             </Paper>
         )
     }
 }
 
-FormLlamadas.PropTypes = {
+FormTareas.PropTypes = {
     classes: PropTypes.object.isRequired,
-    nuevaLlamada: PropTypes.func.isRequired,
-    editarLlamada: PropTypes.func.isRequired
+    user: PropTypes.string.isRequired,
+    nuevaTarea: PropTypes.func.isRequired,
+    editarTarea: PropTypes.func.isRequired
 };
 
 
-export default withStyles(styles)(FormLlamadas);
+export default withStyles(styles)(FormTareas);

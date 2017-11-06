@@ -69,10 +69,11 @@ class RecipeReviewCard extends React.Component {
     };
 
     render() {
+        let estados = [ 'Pendiente', 'En Tránsito', 'Completada'];
         let options = { weekday: 'long', day: 'numeric', year: 'numeric', month: 'long', };
         let badgeColor = ['primary', 'accent'];
         let recurrencia = { 1: 'Mensual', 3: 'Trimestral', 6: 'Semestral', 12: 'Anual' };
-        const { classes, cliente, toggleLlamadas } = this.props;
+        const { classes, cliente, toggleLlamadas, toggleNegocios, toggleTareas } = this.props;
 
         return (
             <div className={classes.container}>
@@ -178,8 +179,8 @@ class RecipeReviewCard extends React.Component {
                             </Typography>
                             <Tooltip title="Nuevo Negocio" placement="left" enterDelay={300}>
                                 <Button
-                                    href={`/api/crearNegocio`}
-                                    // onClick={(e) => addAction(true)}
+                                    // href={`/api/crearNegocio`}
+                                    onClick={toggleNegocios}
                                     fab={true}
                                     color="primary"
                                     aria-label="nuevo negocio"
@@ -193,16 +194,26 @@ class RecipeReviewCard extends React.Component {
                                         ? cliente.negocios.map((negocio, index) => {
                                         return (
                                             <CardContent key={index}>
-
                                                 <Typography type="title" gutterBottom>
-                                                    {negocio.nombre}
+                                                    {negocio.asunto}
                                                 </Typography>
-
+                                                <Typography gutterBottom noWrap>
+                                                    Agente: {negocio.agente}
+                                                </Typography>
+                                                <Typography gutterBottom noWrap>
+                                                    Estado: {negocio.estado}
+                                                </Typography>
+                                                <Typography gutterBottom noWrap>
+                                                    Producto: {negocio.producto}
+                                                </Typography>
                                                 <Typography gutterBottom noWrap>
                                                     Renovación: {negocio.renovar}
                                                     </Typography>
                                                 <Typography gutterBottom noWrap>
                                                     Recurrencia: {recurrencia[negocio.renovacion]}
+                                                </Typography>
+                                                <Typography gutterBottom noWrap>
+                                                    Descripcion: {negocio.descripcion}
                                                 </Typography>
                                             </CardContent>
                                         )
@@ -219,7 +230,7 @@ class RecipeReviewCard extends React.Component {
                             <Tooltip title="Nueva Llamada" placement="left" enterDelay={300}>
                                 <Button
                                     // href={`/api/crearLlamada`}
-                                    onClick={() => toggleLlamadas()}
+                                    onClick={toggleLlamadas}
                                     fab={true}
                                     color="primary"
                                     aria-label="nueva llamada"
@@ -257,8 +268,8 @@ class RecipeReviewCard extends React.Component {
                             </Typography>
                             <Tooltip title="Nueva Tarea" placement="left" enterDelay={300}>
                                 <Button
-                                    href={`/api/crearTarea`}
-                                    // onClick={(e) => addAction(true)}
+                                    // href={`/api/crearTarea`}
+                                    onClick={toggleTareas}
                                     fab={true}
                                     color="primary"
                                     aria-label="nueva tarea"
@@ -272,18 +283,17 @@ class RecipeReviewCard extends React.Component {
                                     cliente.tareas.length > 0
                                         ? cliente.tareas.map((tarea, index) => {
                                         return <CardContent key={index}>
-
+                                            <Typography type="title" gutterBottom>
+                                                Título: {tarea.título}
+                                            </Typography>
                                             <Typography type="caption" gutterBottom align="center">
                                                 {new Date(tarea.fecha_inicio).toLocaleDateString('es-ES', options)}
-                                            </Typography>
-                                            <Typography type="body2" gutterBottom>
-                                                Asunto: {tarea.asunto}
                                             </Typography>
                                             <Typography type="body2" gutterBottom>
                                                 Agente: {tarea.agente}
                                             </Typography>
                                             <Typography type="body2" gutterBottom>
-                                                Estado: {tarea.estado}
+                                                Estado: {estados[tarea.estado]}
                                             </Typography>
                                             <Typography type="body2" gutterBottom noWrap>
                                                 Detalles: {tarea.descripcion}
@@ -304,6 +314,8 @@ RecipeReviewCard.propTypes = {
     classes: PropTypes.object.isRequired,
     cliente: PropTypes.object.isRequired,
     toggleLlamadas: PropTypes.func.isRequired,
+    toggleNegocios: PropTypes.func.isRequired,
+    toggleTareas: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(RecipeReviewCard);

@@ -27,7 +27,7 @@ class App extends Component {
         this.setState({ user })
     }
 
-    loggedIn = () => <Clientes />;
+    loggedIn = () => <Clientes user={this.state.user} />;
 
     logout = () => {
         sessionStorage.removeItem('user');

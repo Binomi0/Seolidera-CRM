@@ -207,7 +207,7 @@ let EnhancedTableToolbar = props => {
                             </Tooltip>
                             </div>
                             : <div style={{display: 'flex'}}>
-                                <Tooltip title="Buscar">
+                                <Tooltip title="Realizar Búsqueda" placement="left" enterDelay={200}>
                                     <IconButton aria-label="Buscar" onClick={() => showSearch()}>
                                         <SearchIcon />
                                     </IconButton>

@@ -16,11 +16,15 @@ const NegociosSchema = new mongoose.Schema({
     tlf: { type: String },
     categoria: { type: String },
     web: { type: String },
-    horario: { type: String },
-    redes: [],
-    frases: [],
-    fotos: [],
-    ficha_actualizada: { type: Boolean },
+    pagado: { type: Boolean },
+    fecha_pago: { type: Date },
+    horario: [{ type: String }],
+    oportunidades: { type: String },
+    producto: { type: String },
+    redes: [{ type: String}],
+    fotos: [{ type: mongoose.Schema.Types.Mixed }],
+    frases: [{ type: String }],
+    activa: { type: Boolean },
     estado: { type: String }
 });
 

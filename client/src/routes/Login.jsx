@@ -1,7 +1,7 @@
 import React from 'react'
+import PropTypes from  'prop-types';
 
-
-export default class Login extends React.Component {
+class Login extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -11,14 +11,9 @@ export default class Login extends React.Component {
     }
 
     login = () => {
-        let accesos = {
-            name: 'admin',
-            pasw: '12345'
-        };
+        let accesos = { admin: '12345', adolfo: '12345', lidia: '12345', juliana: '12345' };
         let { name, pasw } = this.state;
-
-        if (accesos.name === name.toLowerCase() && accesos.pasw === pasw) {
-            // console.log('Acceso concedido');
+        if (accesos[name].toLowerCase() === pasw) {
             this.props.autenticacionUsuario(name)
         } else {
             alert('Acceso denegado')
@@ -41,3 +36,9 @@ export default class Login extends React.Component {
         )
     }
 }
+
+Login.PropTypes = {
+    autenticacionUsuario: PropTypes.func.isRequired
+};
+
+export default Login;

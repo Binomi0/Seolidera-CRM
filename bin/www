@@ -6,11 +6,11 @@
 var app = require('../app');
 var debug = require('debug')('backend:server');
 // var fs = require('fs');
-// var key = fs.readFileSync('encryption/private.key');
-// var cert = fs.readFileSync( 'encryption/primary.crt' );
-// var ca = fs.readFileSync( 'encryption/intermediate.crt' );
-// var options = { key: key, cert: cert, ca: cacheName };
-// var http = require('http');
+// var key = fs.readFileSync('certificates/ssl.crm.seolidera.com.key');
+// var cert = fs.readFileSync( 'certificates/ssl.crm.seolidera.com.crt' );
+// var ca = fs.readFileSync( 'certificates/ssl.crm.seolidera.com.ca' );
+// var options = { key: key, cert: cert, ca: ca };
+// var https = require('https');
 var http = require('http');
 
 /**
@@ -24,6 +24,7 @@ app.set('port', port);
  * Create HTTP server.
  */
 
+// var server = https.createServer(options, app);
 var server = http.createServer(app);
 
 /**
