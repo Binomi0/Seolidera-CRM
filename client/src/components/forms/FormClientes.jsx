@@ -49,22 +49,18 @@ class Formulario extends React.Component {
             sendDisabled: false,
             dialogOpen: false
         }
-        // this.sendForm = this.sendForm.bind(this)
     }
 
     componentWillMount() {
-        // console.log(this.props.cliente);
         if (!this.props.cliente) {
             return null
         } else if (this.props.action) {
-            // console.log('CLIENTE',this.props.cliente);
             this.setState({ ...this.props.cliente })
         }
     }
 
     handleChange(evt, item) {
         if (item === 'nombre' && evt.target.value.length === 3) {
-            // console.log(evt.target.value);
             this.setState({ [item]: evt.target.value, buser: 'seo' + evt.target.value + Math.floor(Math.random() * (99 - 10)) + 10 + '@gmail.com',})
         } else {
             this.setState({ [item]: evt.target.value})
@@ -115,16 +111,15 @@ class Formulario extends React.Component {
                     <DialogTitle>{"Use Google's location service?"}</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Let Google help apps determine location. This means sending anonymous location data to
-                            Google, even when no apps are running.
+                            Estas a punto de modificar la base de datos, confirma por favor.
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={this.handleRequestClose.bind(this, false)} color="primary">
-                            Disagree
+                            Cancelar
                         </Button>
                         <Button onClick={this.handleRequestClose.bind(this, true)} color="primary" autoFocus>
-                            Agree
+                            Aceptar
                         </Button>
                     </DialogActions>
                 </Dialog>

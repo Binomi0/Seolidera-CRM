@@ -8,9 +8,9 @@ import Button from 'material-ui/Button';
 import CloseIcon from 'material-ui-icons/Close';
 import Detalles from '../components/Detalles';
 import Crear from '../components/Crear';
-import Formulario from "../components/Formulario";
+import FormClientes from "../components/forms/FormClientes";
 import { LinearProgress } from 'material-ui/Progress';
-
+import FormLlamadas from '../components/forms/FormLlamadas'
 
 
 const columnData = [
@@ -32,7 +32,9 @@ class Clientes extends Component {
             viewClient: false,
             newClient: false,
             editClient: false,
-            dialogOpen: false
+            dialogOpen: false,
+            newCall: false,
+            editCall: false
         };
         this.loadResources = this.loadResources.bind(this);
     }
@@ -63,8 +65,8 @@ class Clientes extends Component {
                     newArray.push(data);
                     return data
                 });
-                console.log(datos);
-                console.log(newArray);
+                // console.log(datos);
+                // console.log(newArray);
                 this.setState({ usuarios, tabla: datos, columnData })
             });
     }
@@ -72,10 +74,10 @@ class Clientes extends Component {
     itemSelected(client, action) {
         switch (action) {
             case 'ver':
-                this.setState({ selected: client, viewClient: true, newClient: false, editClient: false });
+                this.setState({ selected: client, viewClient: true, newClient: false, editClient: false, newCall: false });
                 break;
             case 'editar':
-                this.setState({ selected: client, viewClient: false, newClient: false, editClient: true })  ;
+                this.setState({ selected: client, viewClient: false, newClient: false, editClient: true, newCall: false })  ;
                 break;
             default:
                 break;
@@ -109,7 +111,17 @@ class Clientes extends Component {
 
     }
 
-    mostrarDetalles = cliente =>  <Detalles cliente={cliente} />;
+    toggleLlamadas= () => this.setState({ newCall: !this.state.newCall });
+
+    nuevaLlamada = llamada => {
+        this.setState({ newCall: false, })
+        this.loadResources()
+    };
+
+
+    editarLlamada(cliente) {
+
+    }
 
     render() {
         let { usuarios, selected, tabla } = this.state;
@@ -117,17 +129,20 @@ class Clientes extends Component {
 
         return (
             <div>
-
                 {
-                    this.state.newClient || this.state.editClient || this.state.viewClient
-                        ? <Button style={{float: 'right'}} raised color="accent" onClick={() => this.setState({ newClient: false, viewClient: false, editClient: false })} >
+                    this.state.newClient || this.state.editClient || this.state.viewClient || this.state.newCall
+                        ? <Button style={{float: 'right'}} raised color="accent" onClick={() => this.setState({ newClient: false, viewClient: false, editClient: false, newCall: false })} >
                         <CloseIcon />
                     </Button>
                         :  ''
                 }
                 {
                     this.state.selected !== 'undefined' && cliente && this.state.viewClient
-                        ?  this.mostrarDetalles(cliente)
+                        ?  <Detalles
+                            cliente={cliente}
+                            toggleLlamadas={this.toggleLlamadas.bind(this)}
+                            // editarLlamada={this.editarLlamada.bind(this)}
+                        />
                         :  ''
                 }
                 {
@@ -151,7 +166,7 @@ class Clientes extends Component {
                 {
                     !this.state.newClient
                     ?   ''
-                    :   <Formulario
+                    :   <FormClientes
                             nuevoCliente={this.nuevoCliente.bind(this)}
                             // cliente={cliente}
                             action={'ver'}
@@ -160,11 +175,30 @@ class Clientes extends Component {
 
                 {
                     this.state.editClient
-                    ?   <Formulario
+                    ?   <FormLlamadas
                             editarCliente={this.editarCliente.bind(this)}
                             cliente={cliente}
                             action={'editar'}
                         />
+                    : ''
+                }
+                {
+                    this.state.newCall
+                    ? <FormLlamadas
+                        nuevaLlamada={this.nuevaLlamada.bind(this)}
+                        cliente={cliente}
+                        action="nueva"
+                    />
+                    : ''
+
+                }
+                {
+                    this.state.editCall
+                    ? <FormLlamadas
+                        editarLlamada={this.editarLlamada().bind(this)}
+                        cliente={cliente}
+                        action="editar"
+                    />
                     : ''
                 }
                 {

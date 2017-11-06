@@ -33,8 +33,8 @@ const styles = theme => ({
         margin: `0 ${theme.spacing.unit * 2}px`,
     },
     card: {
-        minWidth: 360,
-        maxWidth: 480,
+        minWidth: 480,
+        maxWidth: 600,
     },
     media: {
         height: 194,
@@ -72,7 +72,7 @@ class RecipeReviewCard extends React.Component {
         let options = { weekday: 'long', day: 'numeric', year: 'numeric', month: 'long', };
         let badgeColor = ['primary', 'accent'];
         let recurrencia = { 1: 'Mensual', 3: 'Trimestral', 6: 'Semestral', 12: 'Anual' };
-        const { classes, cliente } = this.props;
+        const { classes, cliente, toggleLlamadas } = this.props;
 
         return (
             <div className={classes.container}>
@@ -218,8 +218,8 @@ class RecipeReviewCard extends React.Component {
                             </Typography>
                             <Tooltip title="Nueva Llamada" placement="left" enterDelay={300}>
                                 <Button
-                                    href={`/api/crearLlamada`}
-                                    // onClick={(e) => addAction(true)}
+                                    // href={`/api/crearLlamada`}
+                                    onClick={() => toggleLlamadas()}
                                     fab={true}
                                     color="primary"
                                     aria-label="nueva llamada"
@@ -302,7 +302,8 @@ class RecipeReviewCard extends React.Component {
 
 RecipeReviewCard.propTypes = {
     classes: PropTypes.object.isRequired,
-    cliente: PropTypes.object.isRequired
+    cliente: PropTypes.object.isRequired,
+    toggleLlamadas: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(RecipeReviewCard);
