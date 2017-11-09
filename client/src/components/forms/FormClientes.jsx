@@ -73,7 +73,7 @@ class Formulario extends React.Component {
 
     handleChange(evt, item) {
         if (item === 'nombre' && evt.target.value.length === 3) {
-            this.setState({ [item]: evt.target.value, buser: 'seo' + evt.target.value + Math.floor(Math.random() * (99 - 10)) + 10 + '@gmail.com',})
+            this.setState({ [item]: evt.target.value, buser: 'seo' + evt.target.value.toLowerCase() + Math.floor(Math.random() * (99 - 10)) + 10 + '@gmail.com',})
         } else {
             this.setState({ [item]: evt.target.value})
         }
@@ -119,7 +119,7 @@ class Formulario extends React.Component {
 
                 <Dialog open={this.state.dialogOpen} onRequestClose={this.handleRequestClose.bind(this, false)}>
                     <DialogTitle>{"Confirmación de seguridad"}</DialogTitle>
-s                    <DialogContent>
+                    <DialogContent>
                         <DialogContentText>
                             Estas a punto de modificar la base de datos, confirma por favor.
                         </DialogContentText>

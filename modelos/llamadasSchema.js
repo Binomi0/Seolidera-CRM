@@ -3,7 +3,7 @@
 const mongoose = require('mongoose');
 
 const LlamadasSchema = new mongoose.Schema({
-    cliente: { type: String },
+    cliente: { type: mongoose.Schema.Types.ObjectId, ref: 'Cliente' },
     producto: { type: String },
     tlf: { type: String },
     agente: { type: String },

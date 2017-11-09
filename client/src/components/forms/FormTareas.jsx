@@ -89,6 +89,7 @@ class FormTareas extends React.Component {
         let { action, user } = this.props;
         let datos = this.state;
         datos['cliente'] = this.props.cliente._id;
+        datos['agente'] = user || this.state.agente;
         fetch('/api/tareas/nuevo', {
             method: action === 'editar' ? 'PUT' : 'POST',
             headers: {

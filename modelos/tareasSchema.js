@@ -20,6 +20,7 @@ TareasSchema.pre('save', function (next) {
         this.terminada = 'No'
     } else {
         this.terminada = 'Si'
+
     }
     next();
 });

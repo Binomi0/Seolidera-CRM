@@ -115,7 +115,7 @@ router.post('/:resource/?:action', function (req, res) {
                     });
                 }
                 if (resource !== 'clientes') {
-                    controllers['clientes'].update(id, resource, result._id, function (err, result2) {
+                    controllers['clientes'].updateItem(id, resource, result._id, function (err, result2) {
                         console.log('Actualizando cliente', result2);
                         if (err) {
                             res.json({

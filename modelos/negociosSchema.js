@@ -3,7 +3,7 @@
 const mongoose = require('mongoose');
 
 const NegociosSchema = new mongoose.Schema({
-    cliente: { type: String },
+    cliente: { type: mongoose.Schema.Types.ObjectId, ref: 'Cliente' },
     alta: { type: Date, default: Date.now()},
     renovacion: { type: Number, min: 1, max: 12 },
     renovar: { type: Date },
@@ -27,7 +27,7 @@ const NegociosSchema = new mongoose.Schema({
     frases: [{ type: String }],
     activa: { type: Boolean },
     estado: { type: String },
-    agente: { typre: String },
+    agente: { type: String },
 });
 
 NegociosSchema.pre('save', function (next) {

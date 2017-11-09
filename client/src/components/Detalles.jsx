@@ -197,22 +197,22 @@ class RecipeReviewCard extends React.Component {
                                                 <Typography type="title" gutterBottom>
                                                     {negocio.nombre}
                                                 </Typography>
-                                                <Typography gutterBottom noWrap>
+                                                <Typography gutterBottom >
                                                     Agente: {negocio.agente}
                                                 </Typography>
-                                                <Typography gutterBottom noWrap>
+                                                <Typography gutterBottom >
                                                     Estado: {negocio.estado}
                                                 </Typography>
-                                                <Typography gutterBottom noWrap>
+                                                <Typography gutterBottom >
                                                     Producto: {negocio.producto}
                                                 </Typography>
-                                                <Typography gutterBottom noWrap>
+                                                <Typography gutterBottom >
                                                     Renovación: {new Date(negocio.renovar).toLocaleDateString('es-ES', options)}
                                                     </Typography>
-                                                <Typography gutterBottom noWrap>
+                                                <Typography gutterBottom >
                                                     Recurrencia: {recurrencia[negocio.renovacion]}
                                                 </Typography>
-                                                <Typography gutterBottom noWrap>
+                                                <Typography gutterBottom >
                                                     Descripcion: {negocio.descripcion}
                                                 </Typography>
                                             </CardContent>
@@ -249,9 +249,12 @@ class RecipeReviewCard extends React.Component {
                                             {llamada.agente}
                                         </Typography>
                                         <Typography gutterBottom>
+                                            Estado: {llamada.fecha}
+                                        </Typography>
+                                        <Typography gutterBottom>
                                             Estado: {llamada.estado}
                                         </Typography>
-                                        <Typography gutterBottom noWrap>
+                                        <Typography gutterBottom>
                                             Detalles: {llamada.descripcion}
                                         </Typography>
                                     </CardContent>
@@ -293,9 +296,12 @@ class RecipeReviewCard extends React.Component {
                                             Agente: {tarea.agente}
                                         </Typography>
                                         <Typography type="body2" gutterBottom>
+                                            Responsable: {tarea.responsable}
+                                        </Typography>
+                                        <Typography type="body2" gutterBottom>
                                             Estado: {estados[tarea.estado]}
                                         </Typography>
-                                        <Typography type="body2" gutterBottom noWrap>
+                                        <Typography type="body2" gutterBottom>
                                             Detalles: {tarea.descripcion}
                                         </Typography>
                                     </CardContent>
