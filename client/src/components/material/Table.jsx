@@ -33,13 +33,14 @@ import SearchIcon from 'material-ui-icons/Search';
 import YoutubeSearched from 'material-ui-icons/YoutubeSearchedFor';
 
 class EnhancedTableHead extends React.Component {
-    static propTypes = {
+    static PropTypes = {
         numSelected: PropTypes.number.isRequired,
         onRequestSort: PropTypes.func.isRequired,
         onSelectAllClick: PropTypes.func.isRequired,
         order: PropTypes.string.isRequired,
         orderBy: PropTypes.string.isRequired,
         rowCount: PropTypes.number.isRequired,
+        columnData: PropTypes.array.isRequired,
     };
 
     createSortHandler = property => event => {
@@ -246,7 +247,7 @@ class EnhancedTable extends React.Component {
         super(props);
         this.state = {
             order: 'asc',
-            orderBy: 'fiscal',
+            orderBy: props.columnData[1].id,
             selected: -1,
             data: [],
             page: 0,
@@ -307,12 +308,12 @@ class EnhancedTable extends React.Component {
         }
     };
 
-    handleClick = (event, id, i) => {
+    handleClick = (event, id) => {
 
         if (event.target.checked === false) {
             this.setState({ selected: -1 })
         } else {
-            this.setState({ selected: i });
+            this.setState({ selected: id });
         }
     };
 
@@ -352,6 +353,7 @@ class EnhancedTable extends React.Component {
                 <Paper className={classes.root}>
                     <EnhancedTableToolbar
                         numSelected={selected}
+                        classes={classes}
                         title={title}
                         data={data}
                         itemClicked={this.itemSelected}
@@ -377,17 +379,18 @@ class EnhancedTable extends React.Component {
                             <TableBody>
                                 {data.filter((t) => {
                                     return t[select].toLowerCase().indexOf(this.state.text.toLowerCase()) > -1
-                                }).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((n,i) => {
-                                    const isSelected = this.isSelected(i);
+                                }).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(n => {
+                                    console.log('N:',n);
+                                    const isSelected = this.isSelected(n.id);
                                     return (
                                         <TableRow
                                             hover
-                                            onClick={event => this.handleClick(event, n['id'], i)}
-                                            onKeyDown={event => this.handleKeyDown(event, n['id'], i)}
+                                            onClick={event => this.handleClick(event, n.id)}
+                                            onKeyDown={event => this.handleKeyDown(event, n.id)}
                                             role="checkbox"
                                             aria-checked={isSelected}
                                             tabIndex={-1}
-                                            key={i}
+                                            key={n.id}
                                             selected={isSelected}
                                         >
                                             <TableCell padding="checkbox">
@@ -399,7 +402,7 @@ class EnhancedTable extends React.Component {
                                             <TableCell padding="none">{n[columnData[3].id]}</TableCell>
                                             <TableCell padding="none">{n[columnData[4].id]}</TableCell>
                                         </TableRow>
-                                    )
+                                    );
                                 })}
                             </TableBody>
                             <TableFooter>
@@ -409,6 +412,7 @@ class EnhancedTable extends React.Component {
                                     page={page}
                                     onChangePage={this.handleChangePage}
                                     onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                                    labelRowsPerPage="Filas por página"
                                 />
                             </TableFooter>
                         </Table>

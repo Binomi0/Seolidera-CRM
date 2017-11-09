@@ -55,23 +55,21 @@ class Clientes extends Component {
     }
 
     loadResources() {
-        let newArray = [], datos;
+        let datos;
         fetch('/api/clientes'
             // { origin: 'http://crm.seolidera.com', 'Access-Control-Allow-Origin': '*' }
         )
             .then(res => res.json())
             .then(usuarios => {
-                datos = usuarios.map((usuario, index) => {
-                    let data = {
-                        id: index,
+                datos = usuarios.map((usuario,i) => {
+                    return {
+                        id: i,
                         nombre: usuario.nombre,
                         telf: usuario.telf,
                         activo: usuario.activo,
                         negocios: usuario.negocios,
                         tareas: usuario.tareas
                     };
-                    newArray.push(data);
-                    return data
                 });
                 // console.log(datos);
                 // console.log(newArray);
@@ -126,7 +124,7 @@ class Clientes extends Component {
     toggleTareas = () => this.setState({ nuevaTarea: !this.state.nuevaTarea });
     toggleClientes = () => this.setState({ newClient: !this.state.newClient });
 
-    nuevaLlamada = llamada => {
+    nuevaLlamada = () => {
         this.setState({ newCall: false, });
         this.loadResources()
     };
@@ -136,7 +134,7 @@ class Clientes extends Component {
 
     }
 
-    nuevoNegocio = negocio => {
+    nuevoNegocio = () => {
         this.setState({ nuevoNegocio: false, });
         this.loadResources()
     };
@@ -145,7 +143,7 @@ class Clientes extends Component {
 
     };
 
-    nuevaTarea = tarea => {
+    nuevaTarea = () => {
         this.setState({ nuevaTarea: false, });
         this.loadResources()
     };
@@ -156,7 +154,7 @@ class Clientes extends Component {
 
     render() {
         let { usuarios, selected, tabla } = this.state;
-        let { user } = this.props;
+        let { user, classes } = this.props;
         let cliente = usuarios[selected] || null;
 
         return (
@@ -204,6 +202,7 @@ class Clientes extends Component {
                     ?   ''
                     :   <FullScreenDialog
                             nuevoCliente={this.nuevoCliente.bind(this)}
+                            classes={classes}
                             type="Cliente"
                             cliente={ {} }
                             user={user}
@@ -227,6 +226,7 @@ class Clientes extends Component {
                 {
                     this.state.newCall
                     ? <FullScreenDialog
+                        classes={classes}
                         nuevaLlamada={this.nuevaLlamada.bind(this)}
                         type="Llamada"
                         cliente={cliente}
@@ -252,6 +252,7 @@ class Clientes extends Component {
                 {
                     this.state.nuevoNegocio
                     ? <FullScreenDialog
+                        classes={classes}
                         nuevoNegocio={this.nuevoNegocio.bind(this)}
                         type="Negocio"
                         cliente={cliente}
@@ -279,7 +280,8 @@ class Clientes extends Component {
                 {
                     this.state.nuevaTarea
                         ? <FullScreenDialog
-                            nuevaTarea={this.nuevaTarea.bind(this)}
+                        classes={classes}
+                        nuevaTarea={this.nuevaTarea.bind(this)}
                             type="Tarea"
                             cliente={cliente}
                             user={user}
