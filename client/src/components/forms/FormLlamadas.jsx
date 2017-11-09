@@ -11,6 +11,10 @@ import Dialog, {
     DialogTitle,
 } from 'material-ui/Dialog';
 import Paper from 'material-ui/Paper';
+import Input, { InputLabel } from 'material-ui/Input';
+import { MenuItem } from 'material-ui/Menu';
+import { FormControl } from 'material-ui/Form';
+import Select from 'material-ui/Select';
 
 const styles = theme => ({
     formControl: {
@@ -201,14 +205,18 @@ class FormLlamadas extends React.Component {
                             onChange={(e) => this.handleChange(e, 'cuenta')}
                             margin="normal"
                         />
-                        <TextField
-                            id="estado"
-                            label="Estado"
-                            className={classes.textField}
-                            value={this.state.estado}
-                            onChange={(e) => this.handleChange(e, 'estado')}
-                            margin="normal"
-                        />
+                        <FormControl className={classes.formControl}>
+                            <InputLabel htmlFor="estado">Estado</InputLabel>
+                            <Select
+                                value={this.state.estado}
+                                onChange={(e) => this.handleChange(e, 'estado')}
+                                input={<Input id="estado" />}
+                            >
+                                <MenuItem value={0}>Pendiente</MenuItem>
+                                <MenuItem value={1}>En tránsito</MenuItem>
+                                <MenuItem value={2}>Completada</MenuItem>
+                            </Select>
+                        </FormControl>
                     </Paper>
                 </form>
                 <Button raised color="primary" className={classes.button} onClick={this.confirmForm.bind(this)} disabled={this.state.sendDisabled}>
