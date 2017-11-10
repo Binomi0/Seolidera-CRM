@@ -37,9 +37,14 @@ const styles = theme => ({
     },
     textField: {
         marginLeft: theme.spacing.unit,
-            marginRight: theme.spacing.unit,
-            width: 200,
+        marginRight: theme.spacing.unit,
+        width: 200,
     },
+    textArea: {
+        marginLeft: theme.spacing.unit,
+        marginRight: theme.spacing.unit,
+        width: 320,
+    }
 });
 
 class FormLlamadas extends React.Component {
@@ -182,14 +187,6 @@ class FormLlamadas extends React.Component {
                             margin="normal"
                         />
                         <TextField
-                            id="descripcion"
-                            label="Descripcion"
-                            className={classes.textField}
-                            value={this.state.descripcion}
-                            onChange={(e) => this.handleChange(e, 'descripcion')}
-                            margin="normal"
-                        />
-                        <TextField
                             id="tipo"
                             label="Tipo"
                             className={classes.textField}
@@ -217,6 +214,15 @@ class FormLlamadas extends React.Component {
                                 <MenuItem value={2}>Completada</MenuItem>
                             </Select>
                         </FormControl>
+                        <TextField
+                            id="descripcion"
+                            label="Descripcion"
+                            multiline={true}
+                            className={classes.textArea}
+                            value={this.state.descripcion}
+                            onChange={(e) => this.handleChange(e, 'descripcion')}
+                            margin="normal"
+                        />
                     </Paper>
                 </form>
                 <Button raised color="primary" className={classes.button} onClick={this.confirmForm.bind(this)} disabled={this.state.sendDisabled}>

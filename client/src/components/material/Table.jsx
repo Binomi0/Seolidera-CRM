@@ -247,7 +247,7 @@ class EnhancedTable extends React.Component {
         super(props);
         this.state = {
             order: 'asc',
-            orderBy: props.columnData[1].id,
+            orderBy: props.columnData[0].id,
             selected: -1,
             data: [],
             page: 0,
@@ -269,7 +269,8 @@ class EnhancedTable extends React.Component {
                 id: data[i]['id'],
                 [columnData[0]['id']]: data[i][columnData[0]['id']],
                 [columnData[1]['id']]: data[i][columnData[1]['id']],
-                [columnData[2]['id']]: data[i][columnData[2]['id']],
+                // [columnData[2]['id']]: data[i][columnData[2]['id']],
+                [columnData[2]['id']]: typeof data[i][columnData[2]['id']] === 'string' ? data[i][columnData[2]['id']] : typeof data[i][columnData[2]['id']] === 'object' ? data[i][columnData[2]['id']].length : '',
                 [columnData[3]['id']]: typeof data[i][columnData[3]['id']] === 'string' ? data[i][columnData[3]['id']] : typeof data[i][columnData[3]['id']] === 'object' ? data[i][columnData[3]['id']].length : '',
                 [columnData[4]['id']]: typeof data[i][columnData[4]['id']] === 'string' ? data[i][columnData[4]['id']] : typeof data[i][columnData[4]['id']] === 'object' ? data[i][columnData[4]['id']].length : ''
             };
@@ -353,7 +354,6 @@ class EnhancedTable extends React.Component {
                 <Paper className={classes.root}>
                     <EnhancedTableToolbar
                         numSelected={selected}
-                        classes={classes}
                         title={title}
                         data={data}
                         itemClicked={this.itemSelected}
@@ -362,8 +362,8 @@ class EnhancedTable extends React.Component {
                         search={ this.state.search }
                         showSearch={this.showSearch.bind(this)}
                         select={this.state.select}
-                        changeSelect={this.changeSelect.bind(this)}
-                        filters={Object.keys(data[0])}
+                        changeSelect={this.changeSelect.bind(this)}hola adolfisss
+                        filters={ Object.keys(data[0]) }
                     />
                     <div className={classes.tableWrapper}>
                         <Table>
@@ -380,7 +380,6 @@ class EnhancedTable extends React.Component {
                                 {data.filter((t) => {
                                     return t[select].toLowerCase().indexOf(this.state.text.toLowerCase()) > -1
                                 }).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(n => {
-                                    console.log('N:',n);
                                     const isSelected = this.isSelected(n.id);
                                     return (
                                         <TableRow

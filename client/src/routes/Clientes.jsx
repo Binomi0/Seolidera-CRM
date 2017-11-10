@@ -19,10 +19,10 @@ import FullScreenDialog from '../components/material/FullScreenDialog';
 
 const columnData = [
     { id: 'nombre', numeric: false, disablePadding: true, label: 'Nombre ' },
-    { id: 'telf', numeric: true, disablePadding: false, label: 'Teléfono' },
-    { id: 'activo', numeric: false, disablePadding: false, label: 'Activo' },
-    { id: 'negocios', numeric: false, disablePadding: false, label: 'Negocios' },
-    { id: 'tareas', numeric: false, disablePadding: false, label: 'Tareas' }
+    { id: 'telf', numeric: false, disablePadding: true, label: 'Teléfono' },
+    { id: 'llamadas', numeric: false, disablePadding: true, label: 'Llamadas' },
+    { id: 'negocios', numeric: false, disablePadding: true, label: 'Negocios' },
+    { id: 'tareas', numeric: false, disablePadding: true, label: 'Tareas' }
 ];
 
 class Clientes extends Component {
@@ -66,7 +66,7 @@ class Clientes extends Component {
                         id: i,
                         nombre: usuario.nombre,
                         telf: usuario.telf,
-                        activo: usuario.activo,
+                        llamadas: usuario.llamadas,
                         negocios: usuario.negocios,
                         tareas: usuario.tareas
                     };

@@ -238,6 +238,7 @@ class Formulario extends React.Component {
                         <TextField
                             id="observaciones"
                             label="observaciones"
+                            multiline={true}
                             className={classes.textField}
                             value={this.state.observaciones}
                             onChange={(e) => this.handleChange(e, 'observaciones')}
