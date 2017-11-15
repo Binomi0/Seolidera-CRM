@@ -48,6 +48,7 @@ const styles = theme => ({
 });
 
 class FormLlamadas extends React.Component {
+
     constructor(props) {
         super(props);
         this.state = {
@@ -56,7 +57,7 @@ class FormLlamadas extends React.Component {
             agente: '',
             objetivo: '',
             asunto: '',
-            fecha: '',
+            fecha: new Date("2015-03-25").toLocaleDateString(),
             descripcion: '',
             tipo: '',
             cuenta: '',
@@ -67,19 +68,16 @@ class FormLlamadas extends React.Component {
     }
 
     componentWillMount() {
-        if (!this.props.cliente.llamadas) {
+        let { cliente, action, item } = this.props;
+        if (!cliente) {
             return null
-        } else if (this.props.action) {
-            this.setState({ ...this.props.cliente.llamadas })
+        } else if (action === 'editCall') {
+            this.setState({ ...cliente.llamadas[item] })
         }
     }
 
     handleChange(evt, item) {
-        if (item === 'nombre' && evt.target.value.length === 3) {
-            this.setState({ [item]: evt.target.value, buser: 'seo' + evt.target.value + Math.floor(Math.random() * (99 - 10)) + 10 + '@gmail.com',})
-        } else {
-            this.setState({ [item]: evt.target.value})
-        }
+        this.setState({ [item]: evt.target.value})
     }
 
     confirmForm() {
@@ -96,33 +94,32 @@ class FormLlamadas extends React.Component {
     }
 
     sendForm() {
-        console.log(this.props);
-        let { action } = this.props;
+        let { action, cliente, user, clientActions, item } = this.props;
         let datos = this.state;
-        datos['cliente'] = this.props.cliente._id;
-        fetch('/api/llamadas/nuevo', {
-            method: action === 'editar' ? 'PUT' : 'POST',
-            headers: {
-                'Content-Type': 'application/json; charset=UTF-8',
-            },
+        datos['cliente'] = cliente._id;
+        datos['agente'] = user || this.state.agente;
+        let url = action === 'newCall' ? '/api/llamadas/nuevo' : `/api/llamadas/${cliente.llamadas[item]._id}`;
+        let method = action === 'newCall' ? 'POST' : 'PUT';
+        let myHeaders = {
+            'Content-Type': 'application/json; charset=UTF-8',
+        };
+        fetch(url, {
+            method: method,
+            headers: myHeaders,
             body: JSON.stringify(datos)
         })
             .then(res => res.json())
             .then(result => {
-                action === 'editar'
-                ? this.props.editarLlamada(result)
-                : this.props.nuevaLlamada(result)
-            })
+                clientActions(action, result)
+            }).catch(err => console.log(err))
     }
 
     render() {
         const { classes, action } = this.props;
-        // console.log(this.state);
-        // console.log('ACCION',action);
         return (
             <Paper className={classes.root} elevation={4}>
                 <Typography type="display1" gutterBottom>
-                    { action === 'editar' ? 'Editando Llamada' : 'Añadir nueva llamada'}
+                    { action === 'editCall' ? 'Editando Llamada' : 'Añadir nueva llamada'}
                 </Typography>
                 <Dialog open={this.state.dialogOpen} onRequestClose={this.handleRequestClose.bind(this, false)}>
                     <DialogTitle>{"Confirmación de seguridad"}</DialogTitle>
@@ -145,6 +142,19 @@ class FormLlamadas extends React.Component {
                         <Typography type="title" gutterBottom>
                             Detalles de la llamada
                         </Typography>
+                        <TextField
+                            id="fecha"
+                            label="Fecha de Inicio"
+                            type="date"
+                            className={classes.textField}
+                            value={this.state.fecha}
+                            // defaultValue="15-10-2017"
+                            onChange={(e) => this.handleChange(e, 'fecha')}
+                            // margin="normal"
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
                         <TextField
                             id="producto"
                             label="Producto"
@@ -226,7 +236,7 @@ class FormLlamadas extends React.Component {
                     </Paper>
                 </form>
                 <Button raised color="primary" className={classes.button} onClick={this.confirmForm.bind(this)} disabled={this.state.sendDisabled}>
-                    { action === 'editar' ? 'Editar Llamada' : 'Añadir nueva llamada'}
+                    { action === 'editCall' ? 'Editar Llamada' : 'Añadir nueva llamada'}
                 </Button>
             </Paper>
         )
@@ -235,9 +245,9 @@ class FormLlamadas extends React.Component {
 
 FormLlamadas.PropTypes = {
     classes: PropTypes.object.isRequired,
-    nuevaLlamada: PropTypes.func.isRequired,
-    editarLlamada: PropTypes.func.isRequired
+    cliente: PropTypes.string.isRequired,
+    action: PropTypes.string.isRequired,
+    clientActions: PropTypes.func.isRequired,
 };
-
 
 export default withStyles(styles)(FormLlamadas);

@@ -30,6 +30,8 @@ const NegociosSchema = new mongoose.Schema({
     agente: { type: String },
 });
 
+// TODO (actualizar el usuario business unicamente si es cliente nuevo)
+
 NegociosSchema.pre('save', function (next) {
     console.log('Ejecutando antes de guardar, doc:', this);
     let fecha = new Date();
@@ -40,5 +42,6 @@ NegociosSchema.pre('save', function (next) {
     console.log('Ejecutando antes de guardar');
     next();
 });
+
 
 module.exports = mongoose.model('Negocio', NegociosSchema);

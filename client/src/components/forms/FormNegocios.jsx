@@ -19,7 +19,6 @@ import { MenuItem } from 'material-ui/Menu';
 import { FormControl } from 'material-ui/Form';
 import Select from 'material-ui/Select';
 
-
 const styles = theme => ({
     formControl: {
         margin: theme.spacing.unit,
@@ -53,6 +52,7 @@ const styles = theme => ({
 });
 
 class FormNegocios extends React.Component {
+
     constructor(props) {
         super(props);
         this.state = {
@@ -83,18 +83,17 @@ class FormNegocios extends React.Component {
     }
 
     componentWillMount() {
-        console.log('Montando FormNegocios con este cliente:', this.props.cliente);
-        if (!this.props.cliente.negocios) {
+        let { cliente, action, item } = this.props;
+        if (!cliente) {
             return null
-        } else if (this.props.action) {
-            this.setState({ ...this.props.cliente.negocios })
+        } else if (action === 'editarNegocio') {
+            console.log('montando formnegocios con item', item);
+            this.setState({ ...cliente.negocios[item] })
         }
     }
 
     handleChange(evt, item) {
-        if (item === 'nombre' && evt.target.value.length === 3) {
-            this.setState({ [item]: evt.target.value, buser: 'seo' + evt.target.value + Math.floor(Math.random() * (99 - 10)) + 10 + '@gmail.com',})
-        } else if (item === 'activa') {
+        if (item === 'activa') {
             this.setState({ activa: !this.state.activa })
         } else if (item === 'pagada') {
             this.setState({ pagada: !this.state.pagada })
@@ -117,29 +116,28 @@ class FormNegocios extends React.Component {
     }
 
     sendForm() {
-        let { action, cliente, user } = this.props;
+        let { action, cliente, user, clientActions, item } = this.props;
         let datos = this.state;
         datos['cliente'] = cliente._id;
         datos['agente'] = user || this.state.agente;
-        fetch('/api/negocios/nuevo', {
-            method: action === 'editar' ? 'PUT' : 'POST',
-            headers: {
-                'Content-Type': 'application/json; charset=UTF-8',
-            },
+        let url = action === 'nuevoNegocio' ? '/api/negocios/nuevo' : `/api/negocios/${cliente.negocios[item]._id}`;
+        let method = action === 'nuevoNegocio' ? 'POST' : 'PUT';
+        let myHeaders = {
+            'Content-Type': 'application/json; charset=UTF-8',
+        };
+        fetch(url, {
+            method: method,
+            headers: myHeaders,
             body: JSON.stringify(datos)
         })
             .then(res => res.json())
             .then(result => {
-                action === 'editar'
-                ? this.props.editarNegocio(result)
-                : this.props.nuevoNegocio(result)
+                clientActions(action, result)
             })
     }
 
     render() {
         const { classes, action } = this.props;
-        // console.log(this.state);
-        // console.log('ACCION',action);
         return (
             <Paper className={classes.root} elevation={4}>
 
@@ -237,14 +235,15 @@ class FormNegocios extends React.Component {
                             onChange={(e) => this.handleChange(e, 'web')}
                             margin="normal"
                         />
-                        <TextField
-                            id="horario"
-                            label="Horario"
-                            className={classes.textField}
-                            value={this.state.horario}
-                            onChange={(e) => this.handleChange(e, 'horario')}
-                            margin="normal"
-                        />
+                        {/*<TextField*/}
+                            {/*id="horario"*/}
+                            {/*label="Horario"*/}
+                            {/*className={classes.textField}*/}
+                            {/*value={this.state.horario}*/}
+                            {/*onChange={(e) => this.handleChange(e, 'horario')}*/}
+                            {/*margin="normal"*/}
+                        {/*/>*/}
+
                         <FormControlLabel
                             control={<Input
                                 id="fotos"
@@ -259,28 +258,28 @@ class FormNegocios extends React.Component {
                             label="Fotos"
                         />
 
-                        <TextField
-                            id="frases"
-                            label="Frases clave"
-                            className={classes.textField}
-                            value={this.state.frases}
-                            onChange={(e) => this.handleChange(e, 'frases')}
-                            margin="normal"
-                        />
-                        <TextField
-                            id="redes"
-                            label="Redes"
-                            multiline={true}
-                            className={classes.textField}
-                            value={this.state.redes}
-                            onChange={(e) => this.handleChange(e, 'redes')}
-                            margin="normal"
-                        />
+                        {/*<TextField*/}
+                            {/*id="frases"*/}
+                            {/*label="Frases clave"*/}
+                            {/*className={classes.textField}*/}
+                            {/*value={this.state.frases}*/}
+                            {/*onChange={(e) => this.handleChange(e, 'frases')}*/}
+                            {/*margin="normal"*/}
+                        {/*/>*/}
+                        {/*<TextField*/}
+                            {/*id="redes"*/}
+                            {/*label="Redes"*/}
+                            {/*multiline={true}*/}
+                            {/*className={classes.textField}*/}
+                            {/*value={this.state.redes}*/}
+                            {/*onChange={(e) => this.handleChange(e, 'redes')}*/}
+                            {/*margin="normal"*/}
+                        {/*/>*/}
                     </Paper>
                     <Paper className={classes.root} elevation={3}>
-                        <Typography type="title" gutterBottom>
-                            Detalles del Negocio
-                        </Typography>
+                        {/*<Typography type="title" gutterBottom>*/}
+                            {/*Detalles del Negocio*/}
+                        {/*</Typography>*/}
                         <FormControlLabel
                             control={<Checkbox
                                 checked={this.state.pagada}
@@ -328,10 +327,22 @@ class FormNegocios extends React.Component {
                                 <MenuItem value={12}>Anual</MenuItem>
                             </Select>
                         </FormControl>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel htmlFor="estado">Estado</InputLabel>
+                            <Select
+                                value={this.state.estado}
+                                onChange={(e) => this.handleChange(e, 'estado')}
+                                input={<Input id="estado" />}
+                            >
+                                <MenuItem value={'Pendiente'}>Pendiente</MenuItem>
+                                <MenuItem value={'En Proceso'}>En Proceso</MenuItem>
+                                <MenuItem value={'Completada'}>Completada</MenuItem>
+                            </Select>
+                        </FormControl>
                     </Paper>
                 </form>
                 <Button raised color="primary" className={classes.button} onClick={this.confirmForm.bind(this)} disabled={this.state.sendDisabled}>
-                    { action === 'editar' ? 'Editar Negocio' : 'Añadir nuevo Negocio'}
+                    { action === 'editarNegocio' ? 'Editar Negocio' : 'Añadir nuevo Negocio'}
                 </Button>
             </Paper>
         )
@@ -340,9 +351,9 @@ class FormNegocios extends React.Component {
 
 FormNegocios.PropTypes = {
     classes: PropTypes.object.isRequired,
-    cliente: PropTypes.object.isRequired,
-    nuevoNegocio: PropTypes.func.isRequired,
-    editarNegocio: PropTypes.func.isRequired
+    cliente: PropTypes.string.isRequired,
+    action: PropTypes.string.isRequired,
+    clientActions: PropTypes.func.isRequired,
 };
 
 

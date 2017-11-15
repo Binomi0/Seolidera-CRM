@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const controllers = require('../../controladores/index');
+const mailer = require('../../componentes/mailer');
+const mails = require('../../componentes/mails');
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -124,6 +126,7 @@ router.post('/:resource/?:action', function (req, res) {
                             });
                             return
                         }
+                        //mailer.enviarCorreo(bienvenida);
                         res.json({
                             respuesta: 'Actualización OK',
                             negocio: result,
@@ -131,6 +134,9 @@ router.post('/:resource/?:action', function (req, res) {
                         })
                     });
                 } else {
+                    console.log('Bienvenida:', mails);
+                    let correo = { ...mails.bienvenida,  to: result.email };
+                    mailer.enviarCorreo(correo);
                     res.json({
                         confirmation: 'Respuesta OK',
                         result

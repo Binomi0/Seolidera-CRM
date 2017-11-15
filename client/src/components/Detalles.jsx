@@ -14,6 +14,7 @@ import Badge from 'material-ui/Badge';
 import red from 'material-ui/colors/red';
 import Tooltip from 'material-ui/Tooltip';
 import AddIcon from 'material-ui-icons/Add'
+import EditIcon from 'material-ui-icons/Edit';
 import Phone from 'material-ui-icons/Phone';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 import Business from 'material-ui-icons/Business';
@@ -25,7 +26,11 @@ const styles = theme => ({
         justifyContent: 'center',
         alignItems: 'center'
     },
-    button: {
+    addButton: {
+        margin: theme.spacing.unit,
+        float: 'left'
+    },
+    editButton: {
         margin: theme.spacing.unit,
         float: 'right'
     },
@@ -33,8 +38,8 @@ const styles = theme => ({
         margin: `0 ${theme.spacing.unit * 2}px`,
     },
     card: {
-        minWidth: 480,
-        maxWidth: 600,
+        minWidth: 600,
+        maxWidth: '90%',
     },
     media: {
         height: 194,
@@ -57,6 +62,7 @@ const styles = theme => ({
 });
 
 class RecipeReviewCard extends React.Component {
+
     state = {
         expanded: false,
         callsExpanded: false,
@@ -73,7 +79,7 @@ class RecipeReviewCard extends React.Component {
         let options = { weekday: 'long', day: 'numeric', year: 'numeric', month: 'long', };
         let badgeColor = ['primary', 'accent'];
         let recurrencia = { 1: 'Mensual', 3: 'Trimestral', 6: 'Semestral', 12: 'Anual' };
-        const { classes, cliente, toggleLlamadas, toggleNegocios, toggleTareas } = this.props;
+        const { classes, cliente, toggleItems } = this.props;
 
         return (
             <div className={classes.container}>
@@ -177,23 +183,36 @@ class RecipeReviewCard extends React.Component {
                             <Typography type="headline" component="h2">
                                 Lista de Negocios
                             </Typography>
-                            <Tooltip title="Nuevo Negocio" placement="left" enterDelay={300}>
-                                <Button
-                                    // href={`/api/crearNegocio`}
-                                    onClick={toggleNegocios}
-                                    fab={true}
-                                    color="primary"
-                                    aria-label="nuevo negocio"
-                                    className={classes.button}
-                                >
-                                    <AddIcon />
-                                </Button>
-                            </Tooltip>
-                                {
-                                    cliente.negocios.length > 0
-                                        ? cliente.negocios.map((negocio, index) => {
+                            <CardActions>
+                                <Tooltip title="Nuevo Negocio" placement="left" enterDelay={300}>
+                                    <Button
+                                        // href={`/api/crearNegocio`}
+                                        onClick={() => toggleItems('nuevoNegocio')}
+                                        fab={true}
+                                        color="primary"
+                                        aria-label="nuevo negocio"
+                                        className={classes.addButton}
+                                    >
+                                        <AddIcon />
+                                    </Button>
+                                </Tooltip>
+                            </CardActions>
+                            {
+                                cliente.negocios.length > -1
+                                    ? cliente.negocios.map((negocio, index) => {
+                                    console.log('INDEX: ', index);
                                         return (
                                             <CardContent key={index}>
+                                                <Tooltip title="Editar Negocio" placement="top" enterDelay={300}>
+                                                    <IconButton
+                                                        onClick={() => toggleItems('editarNegocio', index)}
+                                                        color="accent"
+                                                        aria-label="editar negocio"
+                                                        className={classes.editButton}
+                                                    >
+                                                        <EditIcon />
+                                                    </IconButton>
+                                                </Tooltip>
                                                 <Typography type="title" gutterBottom>
                                                     {negocio.nombre}
                                                 </Typography>
@@ -218,8 +237,8 @@ class RecipeReviewCard extends React.Component {
                                             </CardContent>
                                         )
                                     })
-                                        : ''
-                                }
+                                : ''
+                            }
                         </CardContent>
                     </Collapse>
                     <Collapse in={this.state.callsExpanded} transitionDuration="auto" unmountOnExit>
@@ -227,35 +246,46 @@ class RecipeReviewCard extends React.Component {
                             <Typography type="headline" component="h2">
                                 Lista de Llamadas
                             </Typography>
-                            <Tooltip title="Nueva Llamada" placement="left" enterDelay={300}>
-                                <Button
-                                    // href={`/api/crearLlamada`}
-                                    onClick={toggleLlamadas}
-                                    fab={true}
-                                    color="primary"
-                                    aria-label="nueva llamada"
-                                    className={classes.button}
-                                >
-                                    <AddIcon />
-                                </Button>
-                            </Tooltip>
+                            <CardActions>
+                                <Tooltip title="Nueva Llamada" placement="left" enterDelay={300}>
+                                    <Button
+                                        // href={`/api/crearLlamada`}
+                                        onClick={() => toggleItems('newCall')}
+                                        fab={true}
+                                        color="primary"
+                                        aria-label="nueva llamada"
+                                        className={classes.addButton}
+                                    >
+                                        <AddIcon />
+                                    </Button>
+                                </Tooltip>
+                            </CardActions>
                             {
-                                cliente.llamadas.length > 0
+                                cliente.llamadas.length > -1
                                     ? cliente.llamadas.map((llamada, index) => {
                                     return (
                                         <CardContent key={index}>
-
+                                            <Tooltip title="Editar Llamada" placement="top" enterDelay={300}>
+                                                <IconButton
+                                                    onClick={() => toggleItems('editCall', index)}
+                                                    color="accent"
+                                                    aria-label="editar llamada"
+                                                    className={classes.editButton}
+                                                >
+                                                    <EditIcon />
+                                                </IconButton>
+                                            </Tooltip>
                                         <Typography type="title" gutterBottom>
                                             {llamada.agente}
                                         </Typography>
                                         <Typography gutterBottom>
-                                            Estado: {llamada.fecha}
+                                            Fecha: {llamada.fecha}
                                         </Typography>
                                         <Typography gutterBottom>
-                                            Estado: {llamada.estado}
+                                            Estado: {estados[llamada.estado]}
                                         </Typography>
                                         <Typography gutterBottom>
-                                            Detalles: {llamada.descripcion}
+                                            Descripción: {llamada.descripcion}
                                         </Typography>
                                     </CardContent>
                                     )
@@ -269,42 +299,56 @@ class RecipeReviewCard extends React.Component {
                             <Typography type="headline" component="h2">
                                 Lista de Tareas
                             </Typography>
-                            <Tooltip title="Nueva Tarea" placement="left" enterDelay={300}>
-                                <Button
-                                    // href={`/api/crearTarea`}
-                                    onClick={toggleTareas}
-                                    fab={true}
-                                    color="primary"
-                                    aria-label="nueva tarea"
-                                    className={classes.button}
-                                    dense={true}
-                                >
-                                    <AddIcon />
-                                </Button>
-                            </Tooltip>
+                            <CardActions>
+                                <Tooltip title="Nueva Tarea" placement="left" enterDelay={300}>
+                                    <Button
+                                        // href={`/api/crearTarea`}
+                                        onClick={() => toggleItems('nuevaTarea')}
+                                        fab={true}
+                                        color="primary"
+                                        aria-label="nueva tarea"
+                                        className={classes.button}
+                                        dense={true}
+                                    >
+                                        <AddIcon />
+                                    </Button>
+                                </Tooltip>
+                            </CardActions>
                             {
-                                cliente.tareas.length > 0
+                                cliente.tareas.length > -1
                                     ? cliente.tareas.map((tarea, index) => {
-                                    return <CardContent key={index}>
-                                        <Typography type="title" gutterBottom>
-                                            {tarea.titulo}
-                                        </Typography>
-                                        <Typography type="caption" gutterBottom align="center">
-                                            {new Date(tarea.fecha_inicio).toLocaleDateString('es-ES', options)}
-                                        </Typography>
-                                        <Typography type="body2" gutterBottom>
-                                            Agente: {tarea.agente}
-                                        </Typography>
-                                        <Typography type="body2" gutterBottom>
-                                            Responsable: {tarea.responsable}
-                                        </Typography>
-                                        <Typography type="body2" gutterBottom>
-                                            Estado: {estados[tarea.estado]}
-                                        </Typography>
-                                        <Typography type="body2" gutterBottom>
-                                            Detalles: {tarea.descripcion}
-                                        </Typography>
-                                    </CardContent>
+                                    return (
+                                        <CardContent key={index}>
+                                            <Tooltip title="Editar Tarea" placement="top" enterDelay={300}>
+                                                <IconButton
+                                                    onClick={() => toggleItems('editarTarea', index)}
+                                                    color="accent"
+                                                    aria-label="editar tarea"
+                                                    className={classes.editButton}
+                                                >
+                                                    <EditIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                            <Typography type="title" gutterBottom>
+                                                {tarea.titulo}
+                                            </Typography>
+                                            <Typography type="caption" gutterBottom align="center">
+                                                {new Date(tarea.fecha_inicio).toLocaleDateString('es-ES', options)}
+                                            </Typography>
+                                            <Typography type="body2" gutterBottom>
+                                                Agente: {tarea.agente}
+                                            </Typography>
+                                            <Typography type="body2" gutterBottom>
+                                                Responsable: {tarea.responsable}
+                                            </Typography>
+                                            <Typography type="body2" gutterBottom>
+                                                Estado: {estados[tarea.estado]}
+                                            </Typography>
+                                            <Typography type="body2" gutterBottom>
+                                                Detalles: {tarea.descripcion}
+                                            </Typography>
+                                        </CardContent>
+                                    )
                                 })
                                     : ''
                             }
@@ -319,9 +363,7 @@ class RecipeReviewCard extends React.Component {
 RecipeReviewCard.propTypes = {
     classes: PropTypes.object.isRequired,
     cliente: PropTypes.object.isRequired,
-    toggleLlamadas: PropTypes.func.isRequired,
-    toggleNegocios: PropTypes.func.isRequired,
-    toggleTareas: PropTypes.func.isRequired,
+    toggleItems: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(RecipeReviewCard);

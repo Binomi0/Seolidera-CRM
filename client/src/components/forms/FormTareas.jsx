@@ -43,6 +43,7 @@ const styles = theme => ({
 });
 
 class FormTareas extends React.Component {
+
     constructor(props) {
         super(props);
         this.state = {
@@ -59,15 +60,19 @@ class FormTareas extends React.Component {
     }
 
     componentWillMount() {
-        if (!this.props.cliente.tareas) {
+        let { cliente, action, item } = this.props;
+        console.log('cliente:', cliente);
+        console.log('action:', action);
+        console.log('item:', item);
+        if (!cliente) {
             return null
-        } else if (this.props.action) {
-            this.setState({ ...this.props.cliente.tareas })
+        } else if (action === 'editarTarea') {
+            console.log('[editarTarea] FormTareas, insertando la tarea en el state', cliente.tareas[0]);
+            this.setState({ ...cliente.tareas[item] })
         }
     }
 
     handleChange(evt, item) {
-        console.log(item);
         this.setState({ [item]: evt.target.value})
     }
 
@@ -85,32 +90,29 @@ class FormTareas extends React.Component {
     }
 
     sendForm() {
-        console.log(this.props);
-        let { action, user } = this.props;
+        let { action, user, cliente, clientActions, item } = this.props;
         let datos = this.state;
-        datos['cliente'] = this.props.cliente._id;
+        datos['cliente'] = cliente._id;
         datos['agente'] = user || this.state.agente;
-        fetch('/api/tareas/nuevo', {
-            method: action === 'editar' ? 'PUT' : 'POST',
-            headers: {
-                'Content-Type': 'application/json; charset=UTF-8',
-            },
+        let url = action === 'nuevaTarea' ? '/api/tareas/nuevo' : `/api/tareas/${cliente.tareas[item]._id}`;
+        let method = action === 'nuevaTarea' ? 'POST' : 'PUT';
+        let myHeaders = {
+            'Content-Type': 'application/json; charset=UTF-8',
+        };
+        fetch(url, {
+            method: method,
+            headers: myHeaders,
             body: JSON.stringify(datos)
         })
             .then(res => res.json())
             .then(result => {
-                action === 'editar'
-                ? this.props.editarTarea(result)
-                : this.props.nuevaTarea(result)
+                console.log('RESULT', result);
+                clientActions(action, result)
             })
     }
 
     render() {
         const { classes, action } = this.props;
-        // let hoy = new Date.now();
-        // hoy = hoy.toLocaleDateString();
-        // console.log(this.state);
-        // console.log('ACCION',action);
         return (
             <Paper className={classes.root} elevation={4}>
                 <Dialog open={this.state.dialogOpen} onRequestClose={this.handleRequestClose.bind(this, false)}>
@@ -200,7 +202,7 @@ class FormTareas extends React.Component {
                     </Paper>
                 </form>
                 <Button raised color="primary" className={classes.button} onClick={this.confirmForm.bind(this)} disabled={this.state.sendDisabled}>
-                    { action === 'editar' ? 'Editar Tarea' : 'Añadir nueva tarea'}
+                    { action === 'editarTarea' ? 'Editar Tarea' : 'Añadir nueva tarea'}
                 </Button>
             </Paper>
         )
@@ -209,10 +211,9 @@ class FormTareas extends React.Component {
 
 FormTareas.PropTypes = {
     classes: PropTypes.object.isRequired,
-    user: PropTypes.string.isRequired,
-    nuevaTarea: PropTypes.func.isRequired,
-    editarTarea: PropTypes.func.isRequired
+    cliente: PropTypes.string.isRequired,
+    action: PropTypes.string.isRequired,
+    clientActions: PropTypes.func.isRequired,
 };
-
 
 export default withStyles(styles)(FormTareas);

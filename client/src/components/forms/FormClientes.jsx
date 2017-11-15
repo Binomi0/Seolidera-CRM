@@ -11,6 +11,34 @@ import Dialog, {
     DialogTitle,
 } from 'material-ui/Dialog';
 import Paper from 'material-ui/Paper';
+import SubscribeFrom from 'react-mailchimp-subscribe'
+
+const formProps = {
+    action: 'https://seolidera.us17.list-manage.com/subscribe/post?u=73ee3c24ea6a62372ebbed3f9&amp;id=eec0ab04db',
+    messages: {
+        inputPlaceHolder: 'Su E-mail',
+        btnLabel: 'Enviar',
+        sending: 'Enviando',
+        success: 'Gracias por su interés',
+        error: 'Oops, no se ha podido entregar'
+    },
+    styles: {
+        sending: {
+            fontSize: 18,
+            color: "auto"
+        },
+        success: {
+            fontSize: 18,
+            color: "green"
+        },
+        error: {
+            fontSize: 18,
+            color: "red"
+        }
+    }
+};
+
+const Form = () => <SubscribeFrom {...formProps} />;
 
 const styles = theme => ({
     formControl: {
@@ -39,6 +67,7 @@ const styles = theme => ({
 });
 
 class Formulario extends React.Component {
+
     constructor(props) {
         super(props);
         this.state = {
@@ -64,10 +93,11 @@ class Formulario extends React.Component {
     }
 
     componentWillMount() {
-        if (!this.props.cliente) {
+        let { cliente, action } = this.props;
+        if (!cliente) {
             return null
-        } else if (this.props.action) {
-            this.setState({ ...this.props.cliente })
+        } else if (action) {
+            this.setState({ ...cliente })
         }
     }
 
@@ -87,27 +117,36 @@ class Formulario extends React.Component {
         if (!accepted) {
             this.setState({ dialogOpen: accepted })
         } else {
-            this.setState({ dialogOpen: false , sendDisabled: true })
+            this.setState({ dialogOpen: false , sendDisabled: true });
             this.sendForm()
         }
     }
 
     sendForm() {
         let datos = this.state;
-        let { nuevoCliente, editarCliente, action } = this.props;
-        fetch('/api/clientes/nuevo', {
-            method: action === 'editar' ? 'PUT' : 'POST',
+        let tipoEnvio = '';
+        let url = '';
+        let { action, cliente, clientActions } = this.props;
+
+        if (action === 'newClient') {
+            tipoEnvio = 'POST';
+            url = '/api/clientes/nuevo';
+        } else {
+            tipoEnvio = 'PUT';
+            url = `/api/clientes/${cliente['_id']}`
+        }
+
+        fetch(url, {
+            method: tipoEnvio,
             headers: {
                 'Content-Type': 'application/json; charset=UTF-8',
             },
             body: JSON.stringify(datos)
         })
-            .then(res => res.json())
-            .then(result => {
-                action === 'editar'
-                ? editarCliente(result)
-                : nuevoCliente(result)
-            })
+        // .then(res => res.json())
+        .then(() => {
+            clientActions(action)
+        });
     }
 
     render() {
@@ -136,7 +175,7 @@ class Formulario extends React.Component {
                 <form className={classes.container} noValidate autoComplete="off">
                     <Paper className={classes.root} elevation={4}>
                         <Typography type="display1" gutterBottom>
-                            { action === 'editar' ? 'Editando cliente' : 'Añadir nuevo cliente'}
+                            { action === 'editClient' ? 'Editando cliente' : 'Añadir nuevo cliente'}
                         </Typography>
                         <TextField
                             id="nombre"
@@ -246,8 +285,9 @@ class Formulario extends React.Component {
                         />
                     </Paper>
                 </form>
+                <Form />
                 <Button raised color="primary" className={classes.button} onClick={this.confirmForm.bind(this)} disabled={this.state.sendDisabled}>
-                    { action === 'editar' ? 'Editar cliente' : 'Añadir nuevo cliente'}
+                    { action === 'editClient' ? 'Editar cliente' : 'Añadir nuevo cliente'}
                 </Button>
             </div>
         )
@@ -255,10 +295,10 @@ class Formulario extends React.Component {
 }
 
 Formulario.PropTypes = {
-    nuevoCliente: PropTypes.func.isRequired,
-    editarCliente: PropTypes.func.isRequired,
+    clientActions: PropTypes.func.isRequired,
+    cliente: PropTypes.string.isRequired,
+    action: PropTypes.string.isRequired
 
 };
-
 
 export default withStyles(styles)(Formulario);

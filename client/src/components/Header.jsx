@@ -21,37 +21,34 @@ const styles = theme => ({
 });
 
 class Header extends Component {
-    // constructor(props) {
-    //     super(props);
-    // }
 
     render() {
-        let { title, subtitle, user, classes } = this.props;
+        const { title, subtitle, user, classes } = this.props;
         return (
             <div>
                 <AppBar title={`SeoLidera CRM | ${title}`} user={user} logout={() => this.props.logout()} />
-                <p>{subtitle}</p>
+                <p style={{float: 'right', marginRight: 10}}>{subtitle}</p>
                 {
                     user
                     ?   <div className={classes.container}>
-                            <Typograpghy type="title">Sonríe para la vida, no solo para la foto.</Typograpghy>
-                            <IconButton className={classes.button} color="primary">
-                                <BlurOn/>
-                            </IconButton>
+                            <Typograpghy type="title">Sonríe para la vida, no solo para la foto.
+                                <IconButton className={classes.button} color="primary">
+                                    <BlurOn/>
+                                </IconButton>
+                            </Typograpghy>
                         </div>
                     :   ''
                 }
-
-
             </div>
         )
-
     }
 }
 
 Header.PropTypes = {
     title: PropTypes.string.isRequired,
-    route: PropTypes.string.isRequired
+    route: PropTypes.string.isRequired,
+    subtitle: PropTypes.string.isRequired,
+    classes: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(Header);

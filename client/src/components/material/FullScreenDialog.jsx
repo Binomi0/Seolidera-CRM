@@ -1,12 +1,12 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
+// import Divider from 'material-ui/Divider';
+// import List, { ListItem, ListItemText } from 'material-ui/List';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Button from 'material-ui/Button';
 import Dialog from 'material-ui/Dialog';
-// import List, { ListItem, ListItemText } from 'material-ui/List';
-// import Divider from 'material-ui/Divider';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import IconButton from 'material-ui/IconButton';
@@ -17,7 +17,6 @@ import FormNegocios from '../forms/FormNegocios';
 import FormLlamadas from '../forms/FormLlamadas';
 import FormClientes from '../forms/FormClientes';
 import FormTareas from '../forms/FormTareas';
-
 
 const styles = {
     appBar: {
@@ -33,21 +32,18 @@ function Transition(props) {
 }
 
 class FullScreenDialog extends React.Component {
+
     state = {
         open: true,
     };
 
-    handleClickOpen = () => {
-        this.setState({ open: true });
-    };
-
-    handleRequestClose = () => {
+    handleRequestClose = (action) => {
         this.setState({ open: false });
-        this.props.closed()
+        this.props.toggleItems(action)
     };
 
     render() {
-        const { classes, cliente, user, type, nuevoCliente, nuevoNegocio, nuevaLlamada, nuevaTarea, closed } = this.props;
+        const { classes, cliente, user, type, action,  clientActions, item } = this.props;
         return (
             <div>
 
@@ -55,67 +51,69 @@ class FullScreenDialog extends React.Component {
                 <Dialog
                     fullScreen
                     open={this.state.open}
-                    onRequestClose={this.handleRequestClose}
+                    onRequestClose={() => this.handleRequestClose(action)}
                     transition={Transition}
                 >
                     <AppBar className={classes.appBar}>
                         <Toolbar>
-                            <IconButton color="contrast" onClick={this.handleRequestClose} aria-label="Close">
+                            <IconButton color="contrast" onClick={() => this.handleRequestClose(action)} aria-label="Close">
                                 <CloseIcon />
                             </IconButton>
                             <Typography type="title" color="inherit" className={classes.flex}>
-                                Añadir {this.props.type}
+                                {type}
                             </Typography>
-                            <Button color="contrast" onClick={nuevoNegocio}>
+                            <Button color="contrast" onClick={clientActions}>
                                 Guardar
                             </Button>
                         </Toolbar>
                     </AppBar>
                     {
-                        type === 'Negocio'
+                        type === 'Nuevo Negocio' || type === 'Editar Negocio'
                             ? <FormNegocios
-                                nuevoNegocio={nuevoNegocio}
+                                clientActions={clientActions}
                                 cliente={cliente}
-                                action="nuevo"
+                                action={action}
                                 user={user}
+                                item={item}
                             />
                             : ''
                     }
 
                     {
-                        type === 'Llamada'
+                        type === 'Nueva Llamada' || type === 'Editar Llamada'
                             ? <FormLlamadas
-                                nuevaLlamada={nuevaLlamada}
+                                clientActions={clientActions}
                                 cliente={cliente}
-                                action="nuevo"
+                                action={action}
                                 user={user}
+                                item={item}
                             />
                             : ''
                     }
 
                     {
-                        type === 'Tarea'
+                        type === 'Nueva Tarea' || type === 'Editar Tarea'
                             ? <FormTareas
-                                nuevaTarea={nuevaTarea}
+                                clientActions={clientActions}
                                 cliente={cliente}
-                                action={this.props.action}
+                                action={action}
                                 user={user}
-                            />
+                                item={item}
+                        />
                             : ''
                     }
 
                     {
-                        type === 'Cliente'
+                        type === 'Nuevo Cliente' || type === 'Editar Cliente'
                             ? <FormClientes
-                                nuevoCliente={nuevoCliente}
+                                clientActions={clientActions}
                                 cliente={cliente}
-                                action="nuevo"
+                                action={action}
                                 user={user}
-                            />
+                                item={item}
+                        />
                             : ''
                     }
-
-
                 </Dialog>
             </div>
         );
@@ -128,10 +126,8 @@ FullScreenDialog.propTypes = {
     user: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     action: PropTypes.string.isRequired,
-    closed: PropTypes.func.isRequired,
-    // nuevoNegocio: PropTypes.func.isRequired,
-    // nuevaTarea: PropTypes.func.isRequired,
-    // nuevaLlamada: PropTypes.func.isRequired,
+    clientActions: PropTypes.func.isRequired
+
 };
 
 export default withStyles(styles)(FullScreenDialog);

@@ -9,11 +9,7 @@ import Button from 'material-ui/Button';
 import CloseIcon from 'material-ui-icons/Close';
 import Detalles from '../components/Detalles';
 import Crear from '../components/Crear';
-import FormClientes from "../components/forms/FormClientes";
 import { LinearProgress } from 'material-ui/Progress';
-import FormLlamadas from '../components/forms/FormLlamadas';
-import FormNegocios from '../components/forms/FormNegocios';
-import FormTareas from '../components/forms/FormTareas';
 import FullScreenDialog from '../components/material/FullScreenDialog';
 
 
@@ -42,7 +38,9 @@ class Clientes extends Component {
             nuevoNegocio: false,
             editarNegocio: false,
             nuevaTarea: false,
-            editarTarea: false
+            editarTarea: false,
+            loadingData: false,
+            item: ''
         };
         this.loadResources = this.loadResources.bind(this);
     }
@@ -54,14 +52,15 @@ class Clientes extends Component {
         }
     }
 
-    loadResources() {
+    loadResources(item) {
+        console.log('Cargando de la base de datos');
         let datos;
         fetch('/api/clientes'
             // { origin: 'http://crm.seolidera.com', 'Access-Control-Allow-Origin': '*' }
         )
             .then(res => res.json())
-            .then(usuarios => {
-                datos = usuarios.map((usuario,i) => {
+            .then(result => {
+                datos = result.map((usuario,i) => {
                     return {
                         id: i,
                         nombre: usuario.nombre,
@@ -71,9 +70,13 @@ class Clientes extends Component {
                         tareas: usuario.tareas
                     };
                 });
-                // console.log(datos);
+                console.log('Datos obtenidos en lectura', datos);
                 // console.log(newArray);
-                this.setState({ usuarios, tabla: datos, columnData })
+                if (!item) {
+                    this.setState({ usuarios: result, tabla: datos, columnData, loadingData: false })
+                } else {
+                    this.setState({ usuarios: result, tabla: datos, columnData, loadingData: false, [item]: !this.state[item] })
+                }
             });
     }
 
@@ -94,71 +97,25 @@ class Clientes extends Component {
         this.setState({ text })
     }
 
-    nuevoCliente(usuario) {
-        console.log(usuario);
-        // // console.log('RESPUESTA:', usuario);
-        // let data = {
-        //     id: this.state.tabla.length,
-        //     nombre: usuario.result.nombre,
-        //     telf: usuario.result.telf,
-        //     activo: usuario.result.activo,
-        //     negocios: usuario.result.negocios,
-        //     tareas: usuario.result.tareas
-        // };
-        // let newArray = this.state.tabla;
-        // newArray.push(data);
-        this.setState({ newClient: false });
-        this.loadResources()
+    toggleItems = (action, item) => {
+        console.log('Accion seleccionada:',action);
+        console.log('ITEM seleccionado:', item);
+        this.setState({ [action]: !this.state[action], item: item });
+    };
+
+    clientActions(action) {
+        this.loadResources(action)
     }
-
-    editarCliente(cliente) {
-        let { tabla, usuarios, selected } = this.state;
-        tabla[selected] = cliente.result;
-        usuarios[selected] = cliente.result;
-        this.setState({ newCall: false, editClient: false, newClient: false, viewClient: false, tabla, usuarios, nuevoNegocio: false });
-        this.loadResources()
-    }
-
-    toggleLlamadas = () => this.setState({ newCall: !this.state.newCall });
-    toggleNegocios = () => this.setState({ nuevoNegocio: !this.state.nuevoNegocio });
-    toggleTareas = () => this.setState({ nuevaTarea: !this.state.nuevaTarea });
-    toggleClientes = () => this.setState({ newClient: !this.state.newClient });
-
-    nuevaLlamada = () => {
-        this.setState({ newCall: false, });
-        this.loadResources()
-    };
-
-
-    editarLlamada(cliente) {
-
-    }
-
-    nuevoNegocio = () => {
-        this.setState({ nuevoNegocio: false, });
-        this.loadResources()
-    };
-
-    editarNegocio = negocio => {
-
-    };
-
-    nuevaTarea = () => {
-        this.setState({ nuevaTarea: false, });
-        this.loadResources()
-    };
-
-    editarTarea = tarea => {
-
-    };
 
     render() {
-        let { usuarios, selected, tabla } = this.state;
+        console.log('RENDER CLIENTE', this.state);
+        let { usuarios, selected, tabla, item } = this.state;
         let { user, classes } = this.props;
         let cliente = usuarios[selected] || null;
 
         return (
             <div>
+                { this.state.loadingData ? <LinearProgress/> :'' }
                 {
                     this.state.editClient || this.state.viewClient || this.state.newCall || this.state.nuevoNegocio
                         ? <Button style={{float: 'right'}} raised color="accent" onClick={() => this.setState({ newClient: false, viewClient: false, editClient: false, newCall: false, nuevoNegocio: false })} >
@@ -171,9 +128,7 @@ class Clientes extends Component {
                     this.state.selected !== 'undefined' && cliente && this.state.viewClient
                         ?  <Detalles
                             cliente={cliente}
-                            toggleLlamadas={this.toggleLlamadas.bind(this)}
-                            toggleNegocios={this.toggleNegocios.bind(this)}
-                            toggleTareas={this.toggleTareas.bind(this)}
+                            toggleItems={this.toggleItems.bind(this)}
                             // editarLlamada={this.editarLlamada.bind(this)}
                         />
                         :  ''
@@ -198,28 +153,30 @@ class Clientes extends Component {
                 }
 
                 {
-                    !this.state.newClient
-                    ?   ''
-                    :   <FullScreenDialog
-                            nuevoCliente={this.nuevoCliente.bind(this)}
-                            classes={classes}
-                            type="Cliente"
+                    this.state.newClient
+                    ? <FullScreenDialog
                             cliente={ {} }
+                            classes={classes}
                             user={user}
-                            action='nuevo'
-                            closed={this.toggleClientes.bind(this)}
+                            type="Nuevo Cliente"
+                            action='newClient'
+                            clientActions={this.clientActions.bind(this)}
+                            toggleItems={this.toggleItems.bind(this)}
                         />
+                    : ''
                 }
 
                 {
                     this.state.editClient
-                    ?   <FormClientes
-                            editarCliente={this.editarCliente.bind(this)}
+                    ?   <FullScreenDialog
                             cliente={cliente}
-                            action='editar'
-                            closed={this.toggleClientes.bind(this)}
-
-                    />
+                            classes={classes}
+                            user={user}
+                            type="Editar Cliente"
+                            action='editClient'
+                            clientActions={this.clientActions.bind(this)}
+                            toggleItems={this.toggleItems.bind(this)}
+                        />
                     : ''
                 }
 
@@ -227,24 +184,27 @@ class Clientes extends Component {
                     this.state.newCall
                     ? <FullScreenDialog
                         classes={classes}
-                        nuevaLlamada={this.nuevaLlamada.bind(this)}
-                        type="Llamada"
+                        type="Nueva Llamada"
                         cliente={cliente}
                         user={user}
-                        action='nuevo'
-                        closed={this.toggleLlamadas.bind(this)}
+                        action='newCall'
+                        clientActions={this.clientActions.bind(this)}
+                        toggleItems={this.toggleItems.bind(this)}
                     />
                     : ''
                 }
 
                 {
                     this.state.editCall
-                    ? <FormLlamadas
-                        editarLlamada={this.editarLlamada.bind(this)}
+                    ? <FullScreenDialog
+                        type="Editar Llamada"
+                        action='editCall'
+                        item={item}
+                        classes={classes}
                         cliente={cliente}
-                        action="editar"
-                        closed={this.toggleLlamadas.bind(this)}
-
+                        user={user}
+                        clientActions={this.clientActions.bind(this)}
+                        toggleItems={this.toggleItems.bind(this)}
                     />
                     : ''
                 }
@@ -252,56 +212,58 @@ class Clientes extends Component {
                 {
                     this.state.nuevoNegocio
                     ? <FullScreenDialog
+                        type="Nuevo Negocio"
+                        action='nuevoNegocio'
                         classes={classes}
-                        nuevoNegocio={this.nuevoNegocio.bind(this)}
-                        type="Negocio"
                         cliente={cliente}
                         user={user}
-                        action='nuevo'
-                        closed={this.toggleNegocios.bind(this)}
+                        clientActions={this.clientActions.bind(this)}
+                        toggleItems={this.toggleItems.bind(this)}
                     />
                     :''
                 }
 
                 {
                     this.state.editarNegocio
-                    ?
-                        <FormNegocios
-                            editarNegocio={this.editarNegocio.bind(this)}
-                            type="Negocio"
-                            user={user}
-                            action="editar"
-                            cliente={cliente}
-                            closed={this.toggleNegocios.bind(this)}
-                        />
-                        : ''
+                    ? <FullScreenDialog
+                        type="Editar Negocio"
+                        action='editarNegocio'
+                        item={item}
+                        classes={classes}
+                        cliente={cliente}
+                        user={user}
+                        clientActions={this.clientActions.bind(this)}
+                        toggleItems={this.toggleItems.bind(this)}
+                    />
+                    : ''
                 }
 
                 {
                     this.state.nuevaTarea
                         ? <FullScreenDialog
-                        classes={classes}
-                        nuevaTarea={this.nuevaTarea.bind(this)}
-                            type="Tarea"
+                            classes={classes}
+                            type="Nueva Tarea"
                             cliente={cliente}
                             user={user}
-                            action="nuevo"
-                            closed={this.toggleTareas.bind(this)}
-                    />
+                            action='nuevaTarea'
+                            clientActions={this.clientActions.bind(this)}
+                            toggleItems={this.toggleItems.bind(this)}
+                        />
                         :''
                 }
 
                 {
                     this.state.editarTarea
                         ?
-                        <FormTareas
-                            editarNegocio={this.editarTarea.bind(this)}
-                            action="editar"
-                            type="Tarea"
+                        <FullScreenDialog
+                            type="Editar Tarea"
+                            action='editarTarea'
+                            item={item}
+                            classes={classes}
                             cliente={cliente}
                             user={user}
-                            closed={this.toggleTareas.bind(this)}
-
+                            clientActions={this.clientActions.bind(this)}
+                            toggleItems={this.toggleItems.bind(this)}
                         />
                         : ''
                 }
