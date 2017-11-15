@@ -42,6 +42,6 @@ NegociosSchema.pre('save', function (next) {
     console.log('Ejecutando antes de guardar');
     next();
 });
-
+// FIXME algo
 
 module.exports = mongoose.model('Negocio', NegociosSchema);

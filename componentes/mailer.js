@@ -5,16 +5,21 @@ module.exports = {
     enviarCorreo: function (messageOptions) {
         console.log(messageOptions);
         const transporter = nodemailer.createTransport({
-            host: 'smtp.seolidera.com',
-            port: 465,
-            secure: true,
+            service: 'gmail',
             auth: {
-                user: 'admin@seolidera.com',
-                pass: 'ar12003'
-            },
-            tls: {
-                rejectUnauthorized: false
+                user: 'seolidera@gmail.com',
+                pass: 'Jl13011977'
             }
+            // host: 'smtp.seolidera.com',
+            // port: 465,
+            // secure: true,
+            // auth: {
+            //     user: 'admin@seolidera.com',
+            //     pass: 'ar12003'
+            // },
+            // tls: {
+            //     rejectUnauthorized: false
+            // }
         });
 
         transporter.verify(function(error, success) {
@@ -26,7 +31,7 @@ module.exports = {
         });
 
         const mailOptions = {
-            from: 'google@seolidera.com',
+            from: '"Seolidera Google Partner" <seolidera@gmail.com>',
             to: 'adolfo@onrubia.es',
             subject: '❤ Bienvenido a tu Partner de Google ❤',
             text: 'That was easy!'

@@ -15,6 +15,7 @@ router.get('/:resource', function (req, res) {
     // console.log('Resource:', resource)
     // console.log('Controlador:', controller)
 
+
     if (controller) {
         controller.find({}, function (err, result) {
             // console.log('Resultado:', result)
@@ -170,6 +171,12 @@ router.post('/:resource/?:action', function (req, res) {
                     })
                 });
             });
+            break;
+
+        case 'nuevo-prospecto':
+            let correo = { ...mails.prospectos, to: req.body.email };
+            mailer.enviarCorreo(correo);
+            res.json(correo);
             break;
         default:
             break;

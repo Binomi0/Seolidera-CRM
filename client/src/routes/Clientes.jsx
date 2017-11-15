@@ -11,7 +11,7 @@ import Detalles from '../components/Detalles';
 import Crear from '../components/Crear';
 import { LinearProgress } from 'material-ui/Progress';
 import FullScreenDialog from '../components/material/FullScreenDialog';
-
+import Snackbar from 'material-ui/Snackbar';
 
 const columnData = [
     { id: 'nombre', numeric: false, disablePadding: true, label: 'Nombre ' },
@@ -40,7 +40,10 @@ class Clientes extends Component {
             nuevaTarea: false,
             editarTarea: false,
             loadingData: false,
-            item: ''
+            item: '',
+            snackbarOpen: false,
+            vertical: 'bottom',
+            horizontal: 'right'
         };
         this.loadResources = this.loadResources.bind(this);
     }
@@ -104,17 +107,29 @@ class Clientes extends Component {
     };
 
     clientActions(action) {
-        this.loadResources(action)
+        this.loadResources(action);
+        if (action === 'newClient') {
+            this.setState({ snackbarOpen: true })
+        }
     }
 
     render() {
         console.log('RENDER CLIENTE', this.state);
-        let { usuarios, selected, tabla, item } = this.state;
+        let { usuarios, selected, tabla, item, vertical, horizontal, snackbarOpen } = this.state;
         let { user, classes } = this.props;
         let cliente = usuarios[selected] || null;
 
         return (
             <div>
+                <Snackbar
+                    anchorOrigin={{ vertical, horizontal }}
+                    open={snackbarOpen}
+                    onRequestClose={() => this.setState({ snackbarOpen: false })}
+                    SnackbarContentProps={{
+                        'aria-describedby': 'message-id',
+                    }}
+                    message={<span id="message-id">Tu mensaje ha sido enviado</span>}
+                />
                 { this.state.loadingData ? <LinearProgress/> :'' }
                 {
                     this.state.editClient || this.state.viewClient || this.state.newCall || this.state.nuevoNegocio

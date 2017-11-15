@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
 import Login from './routes/Login';
-import Header from './components/Header'
-import Clientes from "./routes/Clientes";
+import Header from './components/Header';
+import Home from './routes/Home';
 import 'typeface-roboto';
 // import Clientes from './routes/Clientes';
 // import Negocios from './routes/Negocios';
@@ -28,7 +28,7 @@ class App extends Component {
         this.setState({ user })
     }
 
-    loggedIn = () => <Clientes user={this.state.user} />;
+    loggedIn = () => <Home user={this.state.user} />;
 
     logout = () => {
         sessionStorage.removeItem('user');
