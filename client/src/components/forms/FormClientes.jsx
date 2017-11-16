@@ -11,7 +11,7 @@ import Dialog, {
     DialogTitle,
 } from 'material-ui/Dialog';
 import Paper from 'material-ui/Paper';
-import SubscribeFrom from 'react-mailchimp-subscribe'
+import SubscribeFrom from 'react-mailchimp-subscribe';
 
 const formProps = {
     action: 'https://seolidera.us17.list-manage.com/subscribe/post?u=73ee3c24ea6a62372ebbed3f9&amp;id=eec0ab04db',

@@ -1,44 +1,42 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'
-import { withStyles } from 'material-ui/styles';
+import Drawer from './material/Drawer';
 import AppBar from './material/AppBar';
-import Typograpghy from 'material-ui/Typography'
-import BlurOn from 'material-ui-icons/BlurOn';
-import IconButton from 'material-ui/IconButton';
-
+// import { withStyles } from 'material-ui/styles';
+// import Typograpghy from 'material-ui/Typography'
+// import BlurOn from 'material-ui-icons/BlurOn';
+// import IconButton from 'material-ui/IconButton';
 // import TopMenu from './material/TopMenu';
 
-const styles = theme => ({
-    container: {
-        margin: theme.spacing.unit,
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'flex-start'
-    },
-    button: {
-        marginTop: 0
-    }
-});
-
 class Header extends Component {
+    state = {
+        drawerOpen: false
+    };
+
+    toggleDrawer(){
+        this.setState({ drawerOpen: !this.state.drawerOpen })
+    }
 
     render() {
-        const { title, subtitle, user, classes } = this.props;
+        const { title, subtitle, user } = this.props;
+        const { drawerOpen } = this.state;
         return (
             <div>
-                <AppBar title={`SeoLidera CRM | ${title}`} user={user} logout={() => this.props.logout()} />
+                <Drawer
+                    open={drawerOpen}
+                    user={user}
+                    logOut={() => this.props.logOut()}
+                    toggleDrawer={this.toggleDrawer.bind(this)}
+                />
+                <AppBar
+                    position="absolute"
+                    title={`SeoLidera CRM | ${title}`}
+                    user={user}
+                    logOut={() => this.props.logOut()}
+                    toggleDrawer={this.toggleDrawer.bind(this)}
+                />
                 <p style={{float: 'right', marginRight: 10}}>{subtitle}</p>
-                {
-                    user
-                    ?   <div className={classes.container}>
-                            <Typograpghy type="title">Sonríe para la vida, no solo para la foto.
-                                <IconButton className={classes.button} color="primary">
-                                    <BlurOn/>
-                                </IconButton>
-                            </Typograpghy>
-                        </div>
-                    :   ''
-                }
+
             </div>
         )
     }
@@ -48,7 +46,6 @@ Header.PropTypes = {
     title: PropTypes.string.isRequired,
     route: PropTypes.string.isRequired,
     subtitle: PropTypes.string.isRequired,
-    classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(Header);
+export default Header;

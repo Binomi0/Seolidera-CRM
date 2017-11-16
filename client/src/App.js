@@ -4,6 +4,7 @@ import Login from './routes/Login';
 import Header from './components/Header';
 import Home from './routes/Home';
 import 'typeface-roboto';
+import { connect } from 'react-redux'
 // import Clientes from './routes/Clientes';
 // import Negocios from './routes/Negocios';
 // import Tareas from './routes/Tareas';
@@ -13,49 +14,77 @@ import 'typeface-roboto';
 
 class App extends Component {
     state = {
-        route: "Home",
-        user: '',
-        version: 'v.0.1'
+        version: 'v.0.2',
     };
 
     componentWillMount(){
         let user = sessionStorage.getItem('user');
-        if (user) this.setState({ user });
+        if (user) {
+            this.props.setUser(user);
+        }
     }
 
     autenticacionUsuario(user) {
         sessionStorage.setItem('user', user);
-        this.setState({ user })
+        this.props.setUser(user);
     }
 
-    loggedIn = () => <Home user={this.state.user} />;
 
-    logout = () => {
+    logOut = () => {
+        console.log('Saliendo');
         sessionStorage.removeItem('user');
-        this.setState({ user: null })
+        this.props.setUser('');
     };
 
-    notLogged = () => <Login autenticacionUsuario={this.autenticacionUsuario.bind(this)} />;
-
-    changeRoute = (route) => {
-        this.setState({ route })
+    handleRoute = route => {
+        console.log('Cambiando ruta', route);
+        this.props.setRoute(route);
     };
+
+    renderPage(route) {
+        return <Home user={this.props.user.nombre} route={route} />
+    }
 
     render() {
+        console.log(this.props);
         return (
             <div className="home">
                 <Header
-                    user={this.state.user}
-                    title={this.state.route}
+                    user={this.props.user.nombre}
+                    title={this.props.route.name}
                     subtitle={this.state.version}
-                    route={this.state.route}
-                    changeRoute={this.changeRoute.bind(this)}
-                    logout={() => this.logout()}
+                    route={this.props.route.name}
+                    handleRoute={this.handleRoute.bind(this)}
+                    logOut={() => this.logOut()}
                 />
-                { this.state.user ? this.loggedIn() : this.notLogged() }
+                { this.props.user.nombre ? '' : <Login  /> }
+                {this.renderPage(this.props.route.name)}
             </div>
         );
     }
 }
 
-export default App;
+const mapStateToProps = (state) => {
+    return {
+        route: state.routes,
+        user: state.users
+    }
+};
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setRoute: (route) => {
+            dispatch({
+                type: 'SET_ROUTE',
+                payload: route
+            })
+        },
+        setUser: (user) => {
+            dispatch({
+                type: 'SET_USER',
+                payload: user
+            })
+        }
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

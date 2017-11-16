@@ -5,7 +5,7 @@ import Button from 'material-ui/Button';
 import Clientes from "./Clientes";
 import Prospectos from './Prospectos';
 
-import Header from '../components/Header';
+// import Header from '../components/Header';
 // import TopMenu from '../components/material/TopMenu';
 
 const styles = theme => ({
@@ -21,7 +21,7 @@ class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            route: 'home',
+            route: props.route || 'home',
             user: props.user,
         }
     }
@@ -30,24 +30,27 @@ class Home extends React.Component {
 
     }
 
+    changeRoute() {
+        this.setState({ route: 'home'})
+    }
+
     renderPage(route) {
         switch (route) {
             case 'clientes':
                 return <Clientes user={this.state.user} />;
-                break;
             case 'prospectos':
-                return <Prospectos />;
-                break;
+                return <Prospectos changeRoute={this.changeRoute.bind(this)} />;
             default:
                 return ''
         }
     }
 
     render() {
-        let { classes } = this.props;
+        let { classes, user } = this.props;
         let { route } = this.state;
         return (
             <div>
+
                 <Button
                     raised
                     color="accent"
@@ -71,7 +74,8 @@ class Home extends React.Component {
 
 Home.PropTypes = {
     classes: PropTypes.object.isRequired,
-    user: PropTypes.string.isRequired
+    user: PropTypes.string.isRequired,
+    route: PropTypes.string.isRequired
 };
 
 export default withStyles(styles)(Home);

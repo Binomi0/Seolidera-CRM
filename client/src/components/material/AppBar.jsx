@@ -24,28 +24,32 @@ const styles = theme => ({
 });
 
 function ButtonAppBar(props) {
-    const classes = props.classes;
+    const { classes, toggleDrawer, logOut, user } = props;
 
     return (
         <div className={classes.root}>
             <AppBar position="static">
                 <Toolbar>
-                    <IconButton className={classes.menuButton} color="contrast" aria-label="Menu">
-                        <MenuIcon />
-                    </IconButton>
+                    {
+                        user
+                        ? <IconButton onClick={() => toggleDrawer(true)} className={classes.menuButton} color="contrast" aria-label="Menu">
+                            <MenuIcon />
+                        </IconButton>
+                        : ''
+                    }
                     <Typography type="title" color="inherit" className={classes.flex}>
                         {props.title}
                     </Typography>
                     {
-                        props.user
+                        user
                             ? <Typography type="title" color="inherit" className={classes.flex}>
                                     {props.user.toUpperCase()}
                                 </Typography>
                             : ''
                     }
                     {
-                        props.user
-                            ? <Button color="contrast" onClick={() => props.logout()} >Salir</Button>
+                        user
+                            ? <Button color="contrast" onClick={() => logOut()} >Salir</Button>
                             : ''
                     }
                 </Toolbar>
@@ -56,6 +60,7 @@ function ButtonAppBar(props) {
 
 ButtonAppBar.propTypes = {
     classes: PropTypes.object.isRequired,
+    toggleDrawer: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(ButtonAppBar);

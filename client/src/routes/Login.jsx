@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from  'prop-types';
+import { connect } from 'react-redux';
 
 class Login extends React.Component {
     constructor(props) {
@@ -14,7 +15,7 @@ class Login extends React.Component {
         let accesos = { admin: '12345', adolfo: '12345', lidia: '12345', juliana: '12345' };
         let { name, pasw } = this.state;
         if (accesos[name].toLowerCase() === pasw) {
-            this.props.autenticacionUsuario(name)
+            this.props.setUser(name)
         } else {
             alert('Acceso denegado')
         }
@@ -38,7 +39,24 @@ class Login extends React.Component {
 }
 
 Login.PropTypes = {
-    autenticacionUsuario: PropTypes.func.isRequired
+    user: PropTypes.object.isRequired
 };
 
-export default Login;
+const mapStateToProps = (state) => {
+    return {
+        user: state.users,
+    }
+};
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setUser: (user) => {
+            dispatch({
+                type: 'SET_USER',
+                payload: user
+            })
+        },
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
+
