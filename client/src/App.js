@@ -34,16 +34,13 @@ class App extends Component {
         console.log('Saliendo');
         sessionStorage.removeItem('user');
         this.props.setUser('');
+        this.props.setRoute('Home');
     };
 
     handleRoute = route => {
         console.log('Cambiando ruta', route);
         this.props.setRoute(route);
     };
-
-    renderPage(route) {
-        return <Home user={this.props.user.nombre} route={route} />
-    }
 
     render() {
         console.log(this.props);
@@ -57,8 +54,8 @@ class App extends Component {
                     handleRoute={this.handleRoute.bind(this)}
                     logOut={() => this.logOut()}
                 />
+                <Home user={this.props.user.nombre} route={this.props.route.name} />
                 { this.props.user.nombre ? '' : <Login  /> }
-                {this.renderPage(this.props.route.name)}
             </div>
         );
     }

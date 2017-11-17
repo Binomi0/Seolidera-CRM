@@ -42,13 +42,6 @@ function ButtonAppBar(props) {
                     </Typography>
                     {
                         user
-                            ? <Typography type="title" color="inherit" className={classes.flex}>
-                                    {props.user.toUpperCase()}
-                                </Typography>
-                            : ''
-                    }
-                    {
-                        user
                             ? <Button color="contrast" onClick={() => logOut()} >Salir</Button>
                             : ''
                     }

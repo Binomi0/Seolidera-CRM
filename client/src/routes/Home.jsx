@@ -1,14 +1,28 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
-import Button from 'material-ui/Button';
 import Clientes from "./Clientes";
 import Prospectos from './Prospectos';
-
-// import Header from '../components/Header';
-// import TopMenu from '../components/material/TopMenu';
+import { connect } from 'react-redux';
+import Typography from 'material-ui/Typography';
+import Avatar from 'material-ui/Avatar';
+import classNames from 'classnames';
+import logo from '../images/logo-seolidera-sombra.png';
 
 const styles = theme => ({
+    row: {
+        display: 'flex',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        alignItems: 'center'
+    },
+    avatar: {
+        margin: 10,
+    },
+    bigAvatar: {
+        width: 60,
+        height: 60,
+    },
     button: {
         margin: theme.spacing.unit,
     },
@@ -17,56 +31,49 @@ const styles = theme => ({
     },
 });
 
+
+
 class Home extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            route: props.route || 'home',
-            user: props.user,
-        }
-    }
-
-    handleState() {
-
-    }
-
-    changeRoute() {
-        this.setState({ route: 'home'})
-    }
 
     renderPage(route) {
         switch (route) {
             case 'clientes':
-                return <Clientes user={this.state.user} />;
+                return <Clientes user={this.props.user.name} />;
             case 'prospectos':
-                return <Prospectos changeRoute={this.changeRoute.bind(this)} />;
+                return <Prospectos changeRoute={() => this.props.setRoute('Home')} />;
             default:
                 return ''
         }
     }
 
     render() {
-        let { classes, user } = this.props;
-        let { route } = this.state;
+        let { classes, user, route } = this.props;
         return (
             <div>
+                {
+                    this.props.route.name !== 'Home'
+                    ? ''
+                    : <div className={classes.row}>
+                        <Avatar
+                            alt="Logo Seolidera"
+                            src={logo}
+                            className={classNames(classes.avatar, classes.bigAvatar)}
+                        />
+                        <Typography type="display1" gutterBottom>
+                            Panel de Control SEOLIDERA CRM
+                        </Typography>
+                        {
+                            user.nombre
+                            ? <Typography type="subtitle" gutterBottom>
+                                Hola {this.props.user.nombre}.
+                            </Typography>
+                            : ''
+                        }
 
-                <Button
-                    raised
-                    color="accent"
-                    className={classes.button}
-                    onClick={() => this.setState({ route: 'clientes' })}
-                >
-                    Clientes
-                </Button>
-                <Button raised
-                        color="accent"
-                        className={classes.button}
-                        onClick={() => this.setState({ route: 'prospectos' })}
-                >
-                    Prospectos
-                </Button>
-                {this.renderPage(route)}
+                    </div>
+                }
+
+                {user ? this.renderPage(route.name) : ''}
             </div>
         )
     }
@@ -75,7 +82,25 @@ class Home extends React.Component {
 Home.PropTypes = {
     classes: PropTypes.object.isRequired,
     user: PropTypes.string.isRequired,
-    route: PropTypes.string.isRequired
+    route: PropTypes.string.isRequired,
+    setRoute: PropTypes.func.isRequired
 };
 
-export default withStyles(styles)(Home);
+const mapStateToProps = (state) => {
+    return {
+        route: state.routes,
+        user: state.users
+    }
+};
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setRoute: (route) => {
+            dispatch({
+                type: 'SET_ROUTE',
+                payload: route
+            })
+        }
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Home));
