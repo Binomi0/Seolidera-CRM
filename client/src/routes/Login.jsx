@@ -44,6 +44,7 @@ class Login extends React.Component {
         let accesos = { admin: '12345', adolfo: '12345', lidia: '12345', juliana: '12345' };
         let { name, pasw } = this.state;
         if (accesos[name].toLowerCase() === pasw) {
+            sessionStorage.setItem('user', name);
             this.props.setUser(name);
             this.props.setRoute('Home')
         } else {

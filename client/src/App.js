@@ -13,9 +13,6 @@ import { connect } from 'react-redux'
 // import Home from './routes/Home';
 
 class App extends Component {
-    state = {
-        version: 'v.0.2',
-    };
 
     componentWillMount(){
         let user = sessionStorage.getItem('user');
@@ -24,32 +21,22 @@ class App extends Component {
         }
     }
 
-    autenticacionUsuario(user) {
-        sessionStorage.setItem('user', user);
-        this.props.setUser(user);
-    }
-
-
     logOut = () => {
-        console.log('Saliendo');
         sessionStorage.removeItem('user');
         this.props.setUser('');
         this.props.setRoute('Home');
     };
 
     handleRoute = route => {
-        console.log('Cambiando ruta', route);
         this.props.setRoute(route);
     };
 
     render() {
-        console.log(this.props);
         return (
             <div className="home">
                 <Header
                     user={this.props.user.nombre}
                     title={this.props.route.name}
-                    subtitle={this.state.version}
                     route={this.props.route.name}
                     handleRoute={this.handleRoute.bind(this)}
                     logOut={() => this.logOut()}

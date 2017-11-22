@@ -2,14 +2,24 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Clientes from "./Clientes";
+import clientActions from '../actions/clientActions';
 import Prospectos from './Prospectos';
+import Perfil from './Perfil';
 import { connect } from 'react-redux';
 import Typography from 'material-ui/Typography';
 import Avatar from 'material-ui/Avatar';
 import classNames from 'classnames';
 import logo from '../images/logo-seolidera-sombra.png';
+import Paper from 'material-ui/Paper';
 
 const styles = theme => ({
+    root: theme.mixins.gutters({
+        paddingTop: 16,
+        paddingBottom: 16,
+        marginTop: theme.spacing.unit * 3,
+        marginLeft: theme.spacing.unit * 2,
+        marginRight: theme.spacing.unit * 2
+    }),
     row: {
         display: 'flex',
         justifyContent: 'center',
@@ -31,16 +41,51 @@ const styles = theme => ({
     },
 });
 
-
-
 class Home extends React.Component {
+    constructor() {
+        super();
+        this.state = {
+            llamadas: [],
+            tareas: []
+        }
+    }
 
-    renderPage(route) {
+    componentDidMount() {
+        clientActions.getTareas(tareas => {
+            // this.setState({ tareas });
+            this.tareasPendientes(tareas)
+        });
+        clientActions.getLlamadas(llamadas => {
+            // this.setState({ llamadas });
+            this.llamadasPendientes(llamadas);
+        });
+    }
+
+    tareasPendientes(tareas) {
+        console.log(tareas);
+        let misTareas = tareas.filter(tarea => {
+            return tarea.agente === this.props.user.nombre && tarea.estado === '0'
+        });
+        this.setState({ tareas: misTareas });
+    }
+
+    llamadasPendientes(llamadas) {
+        console.log(llamadas);
+        let misLlamadas = llamadas.filter(llamada => {
+            return llamada.agente === this.props.user.nombre && llamada.estado === '0'
+        });
+        this.setState({ llamadas: misLlamadas });
+    }
+
+    renderPage(route, user) {
+
         switch (route) {
             case 'clientes':
-                return <Clientes user={this.props.user.name} />;
+                return <Clientes user={user} />;
             case 'prospectos':
-                return <Prospectos changeRoute={() => this.props.setRoute('Home')} />;
+                return <Prospectos user={user} changeRoute={() => this.props.setRoute('Home')} />;
+            case 'perfil':
+                return <Perfil user={user} />;
             default:
                 return ''
         }
@@ -48,6 +93,7 @@ class Home extends React.Component {
 
     render() {
         let { classes, user, route } = this.props;
+        let { llamadas, tareas } = this.state;
         return (
             <div>
                 {
@@ -64,16 +110,32 @@ class Home extends React.Component {
                         </Typography>
                         {
                             user.nombre
-                            ? <Typography type="subtitle" gutterBottom>
-                                Hola {this.props.user.nombre}.
-                            </Typography>
+                            ? <div>
+                                <Typography type="headline" gutterBottom>
+                                    Hola {this.props.user.nombre}.
+                                </Typography>
+                                <Paper className={classes.root} elevation={4}>
+                                    <Typography type="headline" component="h3">
+                                        Llamadas Pendientes: { llamadas.length > 0 ? llamadas.length : '0'}
+                                    </Typography>
+                                    <Typography type="body1" component="p">
+                                        Próxima Llamada: { llamadas.length > 0 ? llamadas[0].descripcion : ''}
+                                    </Typography>
+                                </Paper>
+                                <Paper className={classes.root} elevation={4}>
+                                    <Typography type="headline" component="h3">
+                                        Tareas Pendientes: { tareas.length > 0 ? tareas.length : '0'}
+                                    </Typography>
+                                    <Typography type="body1" component="p">
+                                        Próxima Tarea: { tareas.length > 0 ? tareas[0].titulo : ''}
+                                    </Typography>
+                                </Paper>
+                                </div>
                             : ''
                         }
-
                     </div>
                 }
-
-                {user ? this.renderPage(route.name) : ''}
+                {user ? this.renderPage(route.name, user.nombre) : ''}
             </div>
         )
     }

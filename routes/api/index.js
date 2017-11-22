@@ -127,7 +127,7 @@ router.post('/:resource/?:action', function (req, res) {
                             });
                             return
                         }
-                        //mailer.enviarCorreo(bienvenida);
+                        mailer.enviarCorreo(bienvenida);
                         res.json({
                             respuesta: 'Actualización OK',
                             negocio: result,
@@ -175,8 +175,22 @@ router.post('/:resource/?:action', function (req, res) {
 
         case 'nuevo-prospecto':
             let correo = { ...mails.prospectos, to: req.body.email };
-            mailer.enviarCorreo(correo);
-            res.json(correo);
+            let datos = {...req.body, fecha: new Date()};
+
+            controllers['prospectos'].create(datos, function (err, result) {
+                if (err) {
+                    res.json({
+                        respuesta: 'Error',
+                        mensaje: err.message
+                    })
+                }
+                res.json({
+                    respuesta: 'OK',
+                    mensaje: result,
+                    correo
+                })
+            });
+            // res.json(correo);
             break;
         default:
             break;

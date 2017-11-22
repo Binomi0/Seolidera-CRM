@@ -8,6 +8,8 @@ import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 import People from 'material-ui-icons/People';
 import NaturePeople from 'material-ui-icons/NaturePeople';
+import AccountBox from 'material-ui-icons/AccountBox';
+import Home from 'material-ui-icons/Home';
 import ExitToApp from 'material-ui-icons/ExitToApp';
 import Avatar from 'material-ui/Avatar';
 import classNames from 'classnames';
@@ -88,6 +90,14 @@ class MyDrawer extends React.Component {
 
         const sideList = (
             <div className={classes.list}>
+                <List>
+                    <ListItem button onClick={this.handleLinks.bind(this, 'Home')} >
+                        <ListItemIcon>
+                            <Home />
+                        </ListItemIcon>
+                        <ListItemText primary="Home" />
+                    </ListItem>
+                </List>
                 <Divider light/>
                 <List>
                     <ListItem button onClick={this.handleLinks.bind(this, 'clientes')} >
@@ -103,6 +113,15 @@ class MyDrawer extends React.Component {
                             <NaturePeople/>
                         </ListItemIcon>
                         <ListItemText primary="Prospectos" />
+                    </ListItem>
+                </List>
+                <Divider light/>
+                <List>
+                    <ListItem button onClick={this.handleLinks.bind(this, 'perfil')} >
+                        <ListItemIcon>
+                            <AccountBox/>
+                        </ListItemIcon>
+                        <ListItemText primary="Mi Perfil" />
                     </ListItem>
                 </List>
                 <Divider light/>

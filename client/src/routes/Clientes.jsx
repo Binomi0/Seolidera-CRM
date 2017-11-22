@@ -42,6 +42,7 @@ class Clientes extends Component {
             loadingData: false,
             item: '',
             snackbarOpen: false,
+            snackMessage: '',
             vertical: 'bottom',
             horizontal: 'right'
         };
@@ -49,8 +50,8 @@ class Clientes extends Component {
     }
 
     componentWillMount() {
-        console.log('Montando clientes, tabla: ', this.state.tabla);
-        if (!this.state.tabla.length > 0) {
+        let { tabla } = this.state;
+        if (tabla.length <= 0) {
             this.loadResources()
         }
     }
@@ -58,29 +59,28 @@ class Clientes extends Component {
     loadResources(item) {
         console.log('Cargando de la base de datos');
         let datos;
-        fetch('/api/clientes'
-            // { origin: 'http://crm.seolidera.com', 'Access-Control-Allow-Origin': '*' }
-        )
+        fetch('/api/clientes')
             .then(res => res.json())
             .then(result => {
-                datos = result.map((usuario,i) => {
-                    return {
-                        id: i,
-                        nombre: usuario.nombre,
-                        telf: usuario.telf,
-                        llamadas: usuario.llamadas,
-                        negocios: usuario.negocios,
-                        tareas: usuario.tareas
-                    };
-                });
-                console.log('Datos obtenidos en lectura', datos);
-                // console.log(newArray);
-                if (!item) {
-                    this.setState({ usuarios: result, tabla: datos, columnData, loadingData: false })
-                } else {
-                    this.setState({ usuarios: result, tabla: datos, columnData, loadingData: false, [item]: !this.state[item] })
-                }
+            datos = result.map((usuario,i) => {
+                return {
+                    id: i,
+                    nombre: usuario.nombre,
+                    telf: usuario.telf,
+                    llamadas: usuario.llamadas,
+                    negocios: usuario.negocios,
+                    tareas: usuario.tareas
+                };
             });
+            console.log('Datos obtenidos en lectura', datos);
+            // console.log(newArray);
+            if (!item) {
+                localStorage.setItem('clientes', JSON.stringify(result));
+                this.setState({ usuarios: result, tabla: datos, loadingData: false })
+            } else {
+                this.setState({ usuarios: result, tabla: datos, loadingData: false, [item]: !this.state[item] })
+            }
+        });
     }
 
     itemSelected(client, action) {
@@ -107,10 +107,9 @@ class Clientes extends Component {
     };
 
     clientActions(action) {
+        let message = `Añadido nuevo ${action}`;
         this.loadResources(action);
-        if (action === 'newClient') {
-            this.setState({ snackbarOpen: true })
-        }
+        this.setState({ snackMessage: message, snackbarOpen: true })
     }
 
     render() {
@@ -128,7 +127,7 @@ class Clientes extends Component {
                     SnackbarContentProps={{
                         'aria-describedby': 'message-id',
                     }}
-                    message={<span id="message-id">Tu mensaje ha sido enviado</span>}
+                    message={<span id="message-id">{this.state.snackMessage}</span>}
                 />
                 { this.state.loadingData ? <LinearProgress/> :'' }
                 {

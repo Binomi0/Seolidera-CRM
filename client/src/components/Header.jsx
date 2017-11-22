@@ -35,8 +35,6 @@ class Header extends Component {
                     logOut={() => this.props.logOut()}
                     toggleDrawer={this.toggleDrawer.bind(this)}
                 />
-                <p style={{float: 'right', marginRight: 10}}>{subtitle}</p>
-
             </div>
         )
     }

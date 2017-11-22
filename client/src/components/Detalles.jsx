@@ -74,6 +74,8 @@ class RecipeReviewCard extends React.Component {
         this.setState({ [item]: !this.state[item] });
     };
 
+    // TODO cambiar renderizado en negocios de "producto" a "categoria"
+
     render() {
         let estados = [ 'Pendiente', 'En Tránsito', 'Completada'];
         let options = { weekday: 'long', day: 'numeric', year: 'numeric', month: 'long', };

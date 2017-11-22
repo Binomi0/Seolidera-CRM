@@ -123,7 +123,7 @@ class FullScreenDialog extends React.Component {
 FullScreenDialog.propTypes = {
     classes: PropTypes.object.isRequired,
     cliente: PropTypes.object.isRequired,
-    user: PropTypes.string.isRequired,
+    // user: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     action: PropTypes.string.isRequired,
     clientActions: PropTypes.func.isRequired

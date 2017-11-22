@@ -44,15 +44,19 @@ class Prospectos extends React.Component {
         });
     };
 
+    // TODO crear funcion para borrar prospectos y añadir a juliana a alejandro+
+
     enviarMail() {
+
         let { nombre, email } = this.state;
+        let agente = this.props.user;
         this.setState({ snackbarOpen: true, nombre: '', email: '' });
         let url = '/api/clientes/nuevo-prospecto';
         let headers = { 'Content-Type': 'application/json; charset=UTF-8' };
         fetch(url, {
             method: 'POST',
             headers: headers,
-            body: JSON.stringify({ nombre, email })
+            body: JSON.stringify({ nombre, email, agente })
         })
         .then(() => {
             setTimeout(() => {
