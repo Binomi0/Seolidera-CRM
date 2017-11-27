@@ -108,8 +108,9 @@ class FormLlamadas extends React.Component {
             headers: myHeaders,
             body: JSON.stringify(datos)
         })
-            .then(res => res.json())
+            // .then(res => res.json())
             .then(result => {
+                console.log('RESULT', result);
                 clientActions(action, result)
             }).catch(err => console.log(err))
     }

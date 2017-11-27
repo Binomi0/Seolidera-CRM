@@ -46,7 +46,9 @@ class Home extends React.Component {
         super();
         this.state = {
             llamadas: [],
-            tareas: []
+            tareas: [],
+            cLlamadas: '',
+            cTareas: ''
         }
     }
 
@@ -59,10 +61,13 @@ class Home extends React.Component {
             // this.setState({ llamadas });
             this.llamadasPendientes(llamadas);
         });
+        clientActions.getClients(clientes => {
+            this.clientesPendientes(clientes)
+        })
     }
 
     tareasPendientes(tareas) {
-        console.log(tareas);
+        // console.log(tareas);
         let misTareas = tareas.filter(tarea => {
             return tarea.agente === this.props.user.nombre && tarea.estado === '0'
         });
@@ -70,11 +75,23 @@ class Home extends React.Component {
     }
 
     llamadasPendientes(llamadas) {
-        console.log(llamadas);
+        // console.log(llamadas);
         let misLlamadas = llamadas.filter(llamada => {
             return llamada.agente === this.props.user.nombre && llamada.estado === '0'
         });
         this.setState({ llamadas: misLlamadas });
+    }
+
+    clientesPendientes(clientes) {
+        let cLids = this.state.llamadas.map(llamada => llamada.cliente);
+        let cTids = this.state.tareas.map(tarea => tarea.cliente);
+        let cLPendientes = clientes.filter(cliente => {
+            return cliente._id === `${cLids}`
+        });
+        let cTPendientes = clientes.filter(cliente => {
+            return cliente._id === `${cTids}`
+        });
+        this.setState({ cLlamadas: cLPendientes, cTareas: cTPendientes })
     }
 
     renderPage(route, user) {
@@ -93,7 +110,8 @@ class Home extends React.Component {
 
     render() {
         let { classes, user, route } = this.props;
-        let { llamadas, tareas } = this.state;
+        let { llamadas, tareas, cTareas, cLlamadas } = this.state;
+        console.log(this.state)
         return (
             <div>
                 {
@@ -111,7 +129,7 @@ class Home extends React.Component {
                         {
                             user.nombre
                             ? <div>
-                                <Typography type="headline" gutterBottom>
+                                <Typography type="headline" >
                                     Hola {this.props.user.nombre}.
                                 </Typography>
                                 <Paper className={classes.root} elevation={4}>
@@ -120,6 +138,10 @@ class Home extends React.Component {
                                     </Typography>
                                     <Typography type="body1" component="p">
                                         Próxima Llamada: { llamadas.length > 0 ? llamadas[0].descripcion : ''}
+                                    </Typography><Typography type="body1" component="p">
+                                        Clientes: { cLlamadas ? cLlamadas.map(cliente => {
+                                            return <span key={cliente._id}>{cliente.nombre}</span>
+                                }) : 'No encuentro el nombre' }
                                     </Typography>
                                 </Paper>
                                 <Paper className={classes.root} elevation={4}>
@@ -128,6 +150,11 @@ class Home extends React.Component {
                                     </Typography>
                                     <Typography type="body1" component="p">
                                         Próxima Tarea: { tareas.length > 0 ? tareas[0].titulo : ''}
+                                    </Typography>
+                                    <Typography type="body1" component="p">
+                                        Clientes: { cTareas  ? cTareas.map(cliente => {
+                                            return <span key={cliente._id}>{cliente.nombre}</span>
+                                    }) : 'No encuentro el nombre' }
                                     </Typography>
                                 </Paper>
                                 </div>
