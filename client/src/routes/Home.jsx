@@ -75,7 +75,7 @@ class Home extends React.Component {
     }
 
     llamadasPendientes(llamadas) {
-        // console.log(llamadas);
+        console.log(llamadas);
         let misLlamadas = llamadas.filter(llamada => {
             return llamada.agente === this.props.user.nombre && llamada.estado === '0'
         });
@@ -83,15 +83,30 @@ class Home extends React.Component {
     }
 
     clientesPendientes(clientes) {
-        let cLids = this.state.llamadas.map(llamada => llamada.cliente);
-        let cTids = this.state.tareas.map(tarea => tarea.cliente);
-        let cLPendientes = clientes.filter(cliente => {
-            return cliente._id === `${cLids}`
-        });
-        let cTPendientes = clientes.filter(cliente => {
-            return cliente._id === `${cTids}`
-        });
-        this.setState({ cLlamadas: cLPendientes, cTareas: cTPendientes })
+        console.log(this.state);
+        let { llamadas, tareas } = this.state;
+        let cLids = llamadas.map(llamada => llamada.cliente);
+        let cTids = tareas.map(tarea => tarea.cliente);
+        let cLPendientes = [], cTPendientes = [];
+        for (let i in cLids) {
+            clientes.filter(cliente => {
+                if (cliente._id === cLids[i]) {
+                    cLPendientes.push(cliente)
+                }
+                return cliente._id === `${cLids[i]}`
+            });
+        }
+        for (let i in cTids) {
+            clientes.filter(cliente => {
+                if (cliente._id === cTids[i]) {
+                    cTPendientes.push(cliente)
+                }
+                return cliente._id === `${cTids[i]}`
+            });
+        }
+
+        this.setState({ cLlamadas: cLPendientes, cTareas: cTPendientes });
+        // console.log(cLPendientes)
     }
 
     renderPage(route, user) {
@@ -111,7 +126,7 @@ class Home extends React.Component {
     render() {
         let { classes, user, route } = this.props;
         let { llamadas, tareas, cTareas, cLlamadas } = this.state;
-        console.log(this.state)
+        console.log(this.state);
         return (
             <div>
                 {
@@ -140,7 +155,7 @@ class Home extends React.Component {
                                         Próxima Llamada: { llamadas.length > 0 ? llamadas[0].descripcion : ''}
                                     </Typography><Typography type="body1" component="p">
                                         Clientes: { cLlamadas ? cLlamadas.map(cliente => {
-                                            return <span key={cliente._id}>{cliente.nombre}</span>
+                                            return <span key={cliente._id}>{cliente.nombre}, </span>
                                 }) : 'No encuentro el nombre' }
                                     </Typography>
                                 </Paper>
@@ -153,7 +168,7 @@ class Home extends React.Component {
                                     </Typography>
                                     <Typography type="body1" component="p">
                                         Clientes: { cTareas  ? cTareas.map(cliente => {
-                                            return <span key={cliente._id}>{cliente.nombre}</span>
+                                            return <span key={cliente._id}>{cliente.nombre}, </span>
                                     }) : 'No encuentro el nombre' }
                                     </Typography>
                                 </Paper>

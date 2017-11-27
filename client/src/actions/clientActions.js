@@ -1,5 +1,3 @@
-'use strict';
-
 module.exports = {
     getClients: function (response) {
         fetch('/api/clientes')
