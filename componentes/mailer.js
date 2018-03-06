@@ -8,14 +8,14 @@ module.exports = {
             service: 'gmail',
             auth: {
                 user: 'seolidera@gmail.com',
-                pass: 'Jl13011977'
+                pass: '*******'
             }
             // host: 'smtp.seolidera.com',
             // port: 465,
             // secure: true,
             // auth: {
             //     user: 'admin@seolidera.com',
-            //     pass: 'ar12003'
+            //     pass: '*****'
             // },
             // tls: {
             //     rejectUnauthorized: false
