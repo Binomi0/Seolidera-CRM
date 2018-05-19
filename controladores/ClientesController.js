@@ -45,7 +45,7 @@ module.exports = {
     },
     findResource: function (id, resource, callback) {
         if (id && resource) {
-            Clientes.findOne({nombre: 'Crístian'}, function (err, result) {
+            Clientes.findOne({nombre: 'Crístian'}, function (err, result) { // TODO Revisar parametro
                 if (err) {
                     return callback(err,  null)
                 }
