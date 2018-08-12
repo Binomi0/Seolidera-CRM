@@ -79,7 +79,7 @@
     "alta": "2017-10-26T13:44:12.767Z"
     },
     {
-    "_id": "59f1e81f6d1b0c0924a75930"<,
+    "_id": "59f1e81f6d1b0c0924a75930",
     "nombre": "Angel J,",
     "apellidos": "Gutierrez de Dios",
     "fiscal": "Corriente Alterna Corrienta Continua",
